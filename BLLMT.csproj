@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- Default to Windows for development -->
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <!-- For multi-target builds, use this instead -->
+    <!-- <TargetFrameworks>net10.0-windows;net10.0-maccatalyst</TargetFrameworks> -->
+    
+    <OutputType>WinExe</OutputType>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    
+    <!-- Windows specific -->
+    <UseWindowsForms>true</UseWindowsForms>
+
+    <!-- Display name -->
+    <ApplicationTitle>BLLMT</ApplicationTitle>
+    <ApplicationId>com.bllmt.app</ApplicationId>
+    <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+    <ApplicationVersion>1</ApplicationVersion>
+  </PropertyGroup>
+
+  <!-- Exclude macOS files when building for Windows -->
+  <ItemGroup>
+    <Compile Remove="Platforms\MacCatalyst\**" />
+    <Compile Remove="MauiProgram.cs" />
+    <None Include="Platforms\MacCatalyst\**" />
+    <None Include=".github\workflows\build-release.yml" />
+    <None Include="MauiProgram.cs" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0-windows</TargetFramework>
+    <OutputType>WinExe</OutputType>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    
+    <ApplicationTitle>BLLMT</ApplicationTitle>
+    <ApplicationId>com.bllmt.app</ApplicationId>
+    <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+    <ApplicationVersion>1</ApplicationVersion>
+  </PropertyGroup>
+
+  <!-- Exclude macOS-specific files -->
+  <ItemGroup>
+    <Compile Remove="Platforms\MacCatalyst\**" />
+    <Compile Remove="MauiProgram.cs" />
+    <None Include="Platforms\MacCatalyst\**" />
+    <None Include="MauiProgram.cs" />
+  </ItemGroup>
+  
+  <!-- Remove resx references since they don't exist -->
+  <ItemGroup>
+    <EmbeddedResource Remove="**\*.resx" />
+  </ItemGroup>
+
+</Project>

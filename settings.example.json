@@ -1,0 +1,12 @@
+{
+  "ApiKey": "your-api-key-here",
+  "LlmProvider": "OpenAI",
+  "Model": "gpt-4o-mini",
+  "ApiEndpoint": "https://api.openai.com/v1/chat/completions",
+  "SystemPrompt": "You are a helpful assistant. Provide concise and direct responses.",
+  "TriggerHotkey": "Control+Shift+Q",
+  "OutputHotkey": "Control+Shift+W",
+  "AbortHotkey": "Control+Shift+E",
+  "TypingDelayMs": 50,
+  "TypingVariationMs": 20
+}
