@@ -16,6 +16,9 @@ namespace BLLMT
         [JsonPropertyName("provider")]
         public string Provider { get; set; } = "OpenAI"; // OpenAI, Anthropic, Custom
 
+        [JsonPropertyName("customApiFormat")]
+        public CustomApiFormat? CustomApiFormat { get; set; } = null; // Only used when Provider = "Custom"
+
         [JsonPropertyName("apiKey")]
         public string ApiKey { get; set; } = string.Empty;
 
@@ -25,11 +28,11 @@ namespace BLLMT
         [JsonPropertyName("endpoint")]
         public string Endpoint { get; set; } = "https://api.openai.com/v1/chat/completions";
 
-        [JsonPropertyName("supportsVision")]
-        public bool SupportsVision { get; set; } = false;
-
         [JsonPropertyName("isDefault")]
         public bool IsDefault { get; set; } = false;
+
+        [JsonPropertyName("isEnabled")]
+        public bool IsEnabled { get; set; } = true; // Models are enabled by default
 
         // Per-model system prompt
         [JsonPropertyName("systemPrompt")]
@@ -44,9 +47,6 @@ namespace BLLMT
 
         [JsonPropertyName("screenshotEndHotkey")]
         public string ScreenshotEndHotkey { get; set; } = string.Empty; // Empty = disabled
-
-        [JsonPropertyName("analyzeScreenshotHotkey")]
-        public string AnalyzeScreenshotHotkey { get; set; } = string.Empty; // New: separate action to analyze
 
         [JsonPropertyName("appendVisionHotkey")]
         public string AppendVisionHotkey { get; set; } = string.Empty; // Empty = disabled

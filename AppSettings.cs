@@ -1,4 +1,5 @@
 using System.Text.Json;
+using BLLMT.Constants;
 
 namespace BLLMT
 {
@@ -7,26 +8,29 @@ namespace BLLMT
         // Model Configurations (primary system)
         public List<ModelConfig> Models { get; set; } = new List<ModelConfig>();
         
+        // Global Hotkey Mappings (Phase 2: Global Hotkeys System)
+        public List<HotkeyMapping> HotkeyMappings { get; set; } = new List<HotkeyMapping>();
+        
         // Global UI settings only
-        public int TypingDelayMs { get; set; } = 50;
-        public int TypingVariationMs { get; set; } = 20;
+        public int TypingDelayMs { get; set; } = DefaultTimings.TypingDelayMs;
+        public int TypingVariationMs { get; set; } = DefaultTimings.TypingVariationMs;
         
         // Legacy settings for backward compatibility (will be migrated)
         public string SystemPrompt { get; set; } = "You are a helpful assistant. Provide concise and direct responses.";
         public string ApiKey { get; set; } = string.Empty;
-        public string LlmProvider { get; set; } = "OpenAI";
-        public string Model { get; set; } = "gpt-4o-mini";
-        public string ApiEndpoint { get; set; } = "https://api.openai.com/v1/chat/completions";
+        public string LlmProvider { get; set; } = ProviderTypes.OpenAI;
+        public string Model { get; set; } = DefaultModels.OpenAI_GPT4oMini;
+        public string ApiEndpoint { get; set; } = DefaultEndpoints.OpenAI;
         public string VisionApiKey { get; set; } = string.Empty;
-        public string VisionProvider { get; set; } = "OpenAI";
-        public string VisionModel { get; set; } = "gpt-4o";
-        public string VisionApiEndpoint { get; set; } = "https://api.openai.com/v1/chat/completions";
-        public string TriggerHotkey { get; set; } = "Control+Shift+Q";
-        public string OutputHotkey { get; set; } = "Control+Shift+W";
-        public string AbortHotkey { get; set; } = "Control+Shift+E";
-        public string ScreenshotStartHotkey { get; set; } = "Control+Shift+S";
-        public string ScreenshotEndHotkey { get; set; } = "Control+Shift+D";
-        public string AppendVisionHotkey { get; set; } = "Control+Shift+A";
+        public string VisionProvider { get; set; } = ProviderTypes.OpenAI;
+        public string VisionModel { get; set; } = DefaultModels.OpenAI_GPT4o;
+        public string VisionApiEndpoint { get; set; } = DefaultEndpoints.OpenAI;
+        public string TriggerHotkey { get; set; } = DefaultHotkeys.SendQuery;
+        public string OutputHotkey { get; set; } = DefaultHotkeys.Output;
+        public string AbortHotkey { get; set; } = DefaultHotkeys.Abort;
+        public string ScreenshotStartHotkey { get; set; } = DefaultHotkeys.ScreenshotStart;
+        public string ScreenshotEndHotkey { get; set; } = DefaultHotkeys.ScreenshotEnd;
+        public string AppendVisionHotkey { get; set; } = DefaultHotkeys.VisionReasoning;
         public bool AutoDetectClipboardImages { get; set; } = true;
         public bool CombineScreenshotWithClipboard { get; set; } = true;
 
@@ -44,6 +48,12 @@ namespace BLLMT
                     if (settings.Models.Count == 0)
                     {
                         settings.MigrateLegacySettings();
+                    }
+                    
+                    // Migration: Convert per-model hotkeys to global hotkey mappings
+                    if (settings.HotkeyMappings.Count == 0 && settings.Models.Count > 0)
+                    {
+                        settings.MigrateToGlobalHotkeys();
                     }
                     
                     return settings;
@@ -69,17 +79,7 @@ namespace BLLMT
                     Model = Model,
                     Endpoint = ApiEndpoint,
                     SystemPrompt = SystemPrompt,
-                    SupportsVision = false,
-                    IsDefault = true,
-                    TriggerHotkey = TriggerHotkey,
-                    OutputHotkey = OutputHotkey,
-                    AbortHotkey = AbortHotkey,
-                    ScreenshotStartHotkey = string.Empty, // Don't auto-enable
-                    ScreenshotEndHotkey = string.Empty,
-                    AnalyzeScreenshotHotkey = string.Empty,
-                    AppendVisionHotkey = string.Empty,
-                    AutoDetectClipboardImages = false, // Default to false
-                    CombineScreenshotWithClipboard = CombineScreenshotWithClipboard
+                    IsDefault = true
                 });
             }
 
@@ -94,59 +94,193 @@ namespace BLLMT
                     Model = VisionModel,
                     Endpoint = string.IsNullOrEmpty(VisionApiEndpoint) ? ApiEndpoint : VisionApiEndpoint,
                     SystemPrompt = "Analyze this image in detail. Describe what you see.",
-                    SupportsVision = true,
-                    IsDefault = false,
-                    TriggerHotkey = string.Empty, // Different hotkey
-                    OutputHotkey = OutputHotkey,
-                    AbortHotkey = AbortHotkey,
-                    ScreenshotStartHotkey = ScreenshotStartHotkey,
-                    ScreenshotEndHotkey = ScreenshotEndHotkey,
-                    AnalyzeScreenshotHotkey = AppendVisionHotkey, // Map old append to analyze
-                    AppendVisionHotkey = string.Empty,
-                    AutoDetectClipboardImages = AutoDetectClipboardImages,
-                    CombineScreenshotWithClipboard = CombineScreenshotWithClipboard
+                    IsDefault = false
                 });
             }
 
-            // If no models exist, create defaults with no screenshot hotkeys
+            // If no models exist, create defaults
             if (Models.Count == 0)
             {
                 Models.Add(new ModelConfig
                 {
                     Name = "Quick Text",
-                    Provider = "OpenAI",
-                    Model = "gpt-4o-mini",
-                    Endpoint = "https://api.openai.com/v1/chat/completions",
+                    Provider = ProviderTypes.OpenAI,
+                    Model = DefaultModels.OpenAI_GPT4oMini,
+                    Endpoint = DefaultEndpoints.OpenAI,
                     SystemPrompt = "You are a helpful assistant. Provide concise and direct responses.",
-                    SupportsVision = false,
-                    IsDefault = true,
-                    TriggerHotkey = "Control+Shift+Q",
-                    OutputHotkey = "Control+Shift+W",
-                    AbortHotkey = "Control+Shift+E",
-                    ScreenshotStartHotkey = string.Empty, // Not enabled by default
-                    ScreenshotEndHotkey = string.Empty,
-                    AnalyzeScreenshotHotkey = string.Empty,
-                    AppendVisionHotkey = string.Empty
+                    IsDefault = true
                 });
             }
         }
 
         public ModelConfig? GetDefaultTextModel()
         {
-            return Models.FirstOrDefault(m => m.IsDefault && !m.SupportsVision) 
-                   ?? Models.FirstOrDefault(m => !m.SupportsVision)
+            // Text model = default or first available
+            return Models.FirstOrDefault(m => m.IsDefault) 
                    ?? Models.FirstOrDefault();
         }
 
         public ModelConfig? GetDefaultVisionModel()
         {
-            return Models.FirstOrDefault(m => m.SupportsVision) 
+            // Vision model = model ID suggests vision capability
+            return Models.FirstOrDefault(m => 
+                       m.Model.Contains("vision", StringComparison.OrdinalIgnoreCase) ||
+                       m.Model.Contains("4o", StringComparison.OrdinalIgnoreCase)) 
                    ?? Models.FirstOrDefault(m => m.IsDefault);
         }
 
         public ModelConfig? GetModelById(string id)
         {
             return Models.FirstOrDefault(m => m.Id == id);
+        }
+
+        private void MigrateToGlobalHotkeys()
+        {
+            // Migrate per-model hotkeys to global hotkey mappings
+            int displayOrder = 0;
+
+            // First, try to migrate from per-model hotkey properties if they still exist
+            foreach (var model in Models)
+            {
+                // Try to get hotkeys from model properties (if they exist in JSON)
+                // If not, we'll use legacy AppSettings hotkeys below
+                var modelType = model.GetType();
+                
+                var triggerProp = modelType.GetProperty("TriggerHotkey");
+                if (triggerProp != null)
+                {
+                    string? triggerValue = triggerProp.GetValue(model) as string;
+                    if (!string.IsNullOrEmpty(triggerValue))
+                    {
+                        HotkeyMappings.Add(new HotkeyMapping
+                        {
+                            Hotkey = triggerValue,
+                            ModelId = model.Id,
+                            Action = HotkeyActions.ProcessText,
+                            Description = $"Send query to {model.Name}",
+                            DisplayOrder = displayOrder++
+                        });
+                    }
+                }
+            }
+
+            // If no mappings created from models, use legacy AppSettings hotkeys
+            if (HotkeyMappings.Count == 0)
+            {
+                var defaultModel = Models.FirstOrDefault(m => m.IsDefault) ?? Models.FirstOrDefault();
+                if (defaultModel != null)
+                {
+                    // Use legacy hotkeys from AppSettings
+                    if (!string.IsNullOrEmpty(TriggerHotkey))
+                    {
+                        HotkeyMappings.Add(new HotkeyMapping
+                        {
+                            Hotkey = TriggerHotkey,
+                            ModelId = defaultModel.Id,
+                            Action = HotkeyActions.ProcessText,
+                            Description = "Send query to default model",
+                            DisplayOrder = displayOrder++
+                        });
+                    }
+
+                    if (!string.IsNullOrEmpty(ScreenshotStartHotkey))
+                    {
+                        HotkeyMappings.Add(new HotkeyMapping
+                        {
+                            Hotkey = ScreenshotStartHotkey,
+                            ModelId = defaultModel.Id,
+                            Action = HotkeyActions.ScreenshotStart,
+                            Description = "Start screenshot",
+                            DisplayOrder = displayOrder++
+                        });
+                    }
+
+                    if (!string.IsNullOrEmpty(ScreenshotEndHotkey))
+                    {
+                        HotkeyMappings.Add(new HotkeyMapping
+                        {
+                            Hotkey = ScreenshotEndHotkey,
+                            ModelId = defaultModel.Id,
+                            Action = HotkeyActions.ScreenshotEnd,
+                            Description = "End screenshot and analyze",
+                            DisplayOrder = displayOrder++
+                        });
+                    }
+
+                    if (!string.IsNullOrEmpty(AppendVisionHotkey))
+                    {
+                        HotkeyMappings.Add(new HotkeyMapping
+                        {
+                            Hotkey = AppendVisionHotkey,
+                            ModelId = defaultModel.Id,
+                            Action = HotkeyActions.VisionReasoning,
+                            Description = "Vision + Reasoning",
+                            DisplayOrder = displayOrder++
+                        });
+                    }
+                }
+            }
+
+            // Always add global actions (Output, Abort) if not present
+            if (!HotkeyMappings.Any(m => m.Action == HotkeyActions.Output))
+            {
+                HotkeyMappings.Add(new HotkeyMapping
+                {
+                    Hotkey = OutputHotkey,
+                    ModelId = HotkeyActions.ModelGlobal,
+                    Action = HotkeyActions.Output,
+                    Description = "Output/type response",
+                    DisplayOrder = displayOrder++
+                });
+            }
+
+            if (!HotkeyMappings.Any(m => m.Action == HotkeyActions.Abort))
+            {
+                HotkeyMappings.Add(new HotkeyMapping
+                {
+                    Hotkey = AbortHotkey,
+                    ModelId = HotkeyActions.ModelGlobal,
+                    Action = HotkeyActions.Abort,
+                    Description = "Abort/cancel operation",
+                    DisplayOrder = displayOrder++
+                });
+            }
+
+            // If still no mappings, create sensible defaults
+            if (HotkeyMappings.Count == 0)
+            {
+                var defaultModel = Models.FirstOrDefault(m => m.IsDefault) ?? Models.FirstOrDefault();
+                if (defaultModel != null)
+                {
+                    HotkeyMappings.AddRange(new[]
+                    {
+                        new HotkeyMapping
+                        {
+                            Hotkey = DefaultHotkeys.SendQuery,
+                            ModelId = defaultModel.Id,
+                            Action = HotkeyActions.ProcessText,
+                            Description = "Send query to default model",
+                            DisplayOrder = 0
+                        },
+                        new HotkeyMapping
+                        {
+                            Hotkey = DefaultHotkeys.Output,
+                            ModelId = HotkeyActions.ModelGlobal,
+                            Action = HotkeyActions.Output,
+                            Description = "Output/type response",
+                            DisplayOrder = 1
+                        },
+                        new HotkeyMapping
+                        {
+                            Hotkey = DefaultHotkeys.Abort,
+                            ModelId = HotkeyActions.ModelGlobal,
+                            Action = HotkeyActions.Abort,
+                            Description = "Abort/cancel operation",
+                            DisplayOrder = 2
+                        }
+                    });
+                }
+            }
         }
 
         public void Save()

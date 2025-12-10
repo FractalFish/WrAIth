@@ -1,3 +1,18 @@
+# Form1.cs - Complete Updated Version
+
+## Instructions
+Replace your entire Form1.cs file with the code below.
+
+This version includes:
+- ? Global hotkeys support via HotkeyMappings
+- ? OnHotkeyTriggered() routing method
+- ? Model-based action handlers
+- ? Helper methods for model selection
+- ? All existing functionality preserved
+
+---
+
+```csharp
 using BLLMT.Constants;
 
 namespace BLLMT
@@ -10,7 +25,7 @@ namespace BLLMT
         private KeyboardSimulator? _keyboardSimulator;
         private KeyboardHook? _keyboardHook;
         private ScreenshotService? _screenshotService;
-
+        
         private string _queuedResponse = string.Empty;
         private string _visionResult = string.Empty;
         private string _pendingScreenshotModelId = string.Empty;
@@ -18,7 +33,7 @@ namespace BLLMT
         private bool _isEmulationActive = false;
         private bool _isEmulationPaused = false;
         private bool _isProcessingRequest = false;
-
+        
         private Keys _abortModifiers = Keys.None;
         private Keys _abortKey = Keys.None;
 
@@ -41,10 +56,10 @@ namespace BLLMT
             _keyboardSimulator = new KeyboardSimulator(_settings.TypingDelayMs, _settings.TypingVariationMs);
             _keyboardHook = new KeyboardHook();
             _keyboardHook.KeyPressed += OnKeyPressed;
-
+            
             _screenshotService = new ScreenshotService();
             _screenshotService.ScreenshotCaptured += OnScreenshotCaptured;
-
+            
             Log("Services initialized successfully");
         }
 
@@ -53,7 +68,7 @@ namespace BLLMT
             if (_hotkeyManager == null) return;
 
             Log("Registering global hotkeys from HotkeyMappings...");
-
+            
             int registeredCount = 0;
             foreach (var mapping in _settings.HotkeyMappings)
             {
@@ -62,18 +77,18 @@ namespace BLLMT
                     Log($"Skipping disabled mapping: {mapping.GetDisplayString(_settings)}");
                     continue;
                 }
-
+                
                 if (string.IsNullOrEmpty(mapping.Hotkey))
                 {
                     Log($"Skipping mapping with empty hotkey: {mapping.Description}");
                     continue;
                 }
-
-                int id = _hotkeyManager.RegisterHotkey(mapping.Hotkey, () =>
+                
+                int id = _hotkeyManager.RegisterHotkey(mapping.Hotkey, () => 
                 {
                     OnHotkeyTriggered(mapping);
                 });
-
+                
                 if (id >= 0)
                 {
                     Log($"? Registered: {mapping.Hotkey} ? {HotkeyActions.GetDisplayName(mapping.Action)} (ID: {id})");
@@ -84,7 +99,7 @@ namespace BLLMT
                     Log($"? FAILED to register: {mapping.Hotkey} ? {HotkeyActions.GetDisplayName(mapping.Action)}");
                 }
             }
-
+            
             UpdateStatus($"Ready - {registeredCount} hotkeys registered");
             Log($"=== Hotkey registration complete: {registeredCount} active ===");
         }
@@ -93,7 +108,7 @@ namespace BLLMT
         {
             Log($"=== HOTKEY TRIGGERED: {mapping.Action} ===");
             Log($"Mapping: {mapping.GetDisplayString(_settings)}");
-
+            
             try
             {
                 switch (mapping.Action)
@@ -101,31 +116,31 @@ namespace BLLMT
                     case HotkeyActions.ProcessText:
                         OnProcessText(mapping.ModelId);
                         break;
-
+                        
                     case HotkeyActions.ProcessImage:
                         OnProcessImage(mapping.ModelId);
                         break;
-
+                        
                     case HotkeyActions.ScreenshotStart:
                         OnScreenshotStart(mapping.ModelId);
                         break;
-
+                        
                     case HotkeyActions.ScreenshotEnd:
                         OnScreenshotEnd(mapping.ModelId);
                         break;
-
+                        
                     case HotkeyActions.VisionReasoning:
                         OnVisionReasoning(mapping.ModelId);
                         break;
-
+                        
                     case HotkeyActions.Output:
                         OnOutputHotkey();
                         break;
-
+                        
                     case HotkeyActions.Abort:
                         OnAbortHotkey();
                         break;
-
+                        
                     default:
                         Log($"WARNING: Unknown action type: {mapping.Action}");
                         break;
@@ -145,20 +160,20 @@ namespace BLLMT
                 Log("(Current) model requested - using default");
                 return _settings.GetDefaultTextModel();
             }
-
+            
             if (modelId == HotkeyActions.ModelGlobal)
             {
                 Log("Global action - no specific model");
                 return null;
             }
-
+            
             var model = _settings.GetModelById(modelId);
             if (model == null)
             {
                 Log($"Model ID {modelId} not found, falling back to default");
                 return _settings.GetDefaultTextModel();
             }
-
+            
             return model;
         }
 
@@ -171,27 +186,27 @@ namespace BLLMT
                 TypingVariationMs = _settings.TypingVariationMs
             };
             tempSettings.Models[0].IsDefault = true;
-
+            
             return new LLMService(tempSettings);
         }
 
         private void ParseAbortHotkey()
         {
             // Try to get abort hotkey from first mapping with Abort action
-            var abortMapping = _settings.HotkeyMappings.FirstOrDefault(m =>
+            var abortMapping = _settings.HotkeyMappings.FirstOrDefault(m => 
                 m.Action == HotkeyActions.Abort && m.IsEnabled);
-
+            
             string abortHotkey = abortMapping?.Hotkey ?? _settings.AbortHotkey;
-
+            
             var parts = abortHotkey.Split('+', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-
+            
             _abortModifiers = Keys.None;
             _abortKey = Keys.None;
 
             foreach (var part in parts)
             {
                 string upperPart = part.ToUpperInvariant();
-
+                
                 if (upperPart == "CONTROL" || upperPart == "CTRL")
                     _abortModifiers |= Keys.Control;
                 else if (upperPart == "SHIFT")
@@ -209,7 +224,7 @@ namespace BLLMT
         {
             Log("=== SCREENSHOT START ACTION ===");
             Log($"Model: {modelId}");
-
+            
             if (_screenshotService != null)
             {
                 _screenshotService.StartCapture();
@@ -222,9 +237,9 @@ namespace BLLMT
         {
             Log("=== SCREENSHOT END ACTION ===");
             Log($"Model: {modelId}");
-
+            
             _pendingScreenshotModelId = modelId;
-
+            
             if (_screenshotService != null && _screenshotService.IsCapturing)
             {
                 _screenshotService.EndCapture();
@@ -242,7 +257,7 @@ namespace BLLMT
         private async void OnScreenshotCaptured(object? sender, ScreenshotService.ScreenshotCapturedEventArgs e)
         {
             Log($"Screenshot captured: {e.CaptureArea.Width}x{e.CaptureArea.Height}");
-
+            
             if (_isProcessingRequest)
             {
                 Log("Already processing a request, queuing screenshot");
@@ -267,7 +282,7 @@ namespace BLLMT
         private async void OnVisionReasoning(string modelId)
         {
             Log("=== VISION + REASONING ACTION ===");
-
+            
             if (_isProcessingRequest)
             {
                 Log("Already processing a request, ignoring");
@@ -311,16 +326,16 @@ namespace BLLMT
                 _isProcessingRequest = true;
                 UpdateStatus("Combining vision with reasoning...");
                 Log("=== STAGE 2: REASONING WITH VISION CONTEXT ===");
-
+                
                 string combinedPrompt = string.Format(UIStrings.VisionPromptCombined, _visionResult, clipboardText);
-
+                
                 Log($"Combined prompt length: {combinedPrompt.Length} characters");
                 notifyIcon.ShowBalloonTip(DefaultTimings.BalloonTipDuration, UIStrings.AppName, "Reasoning with vision context...", ToolTipIcon.Info);
 
                 var llmService = CreateLLMServiceForModel(model);
                 _queuedResponse = await llmService.GetResponseAsync(combinedPrompt);
                 _responsePosition = 0;
-
+                
                 Log($"Reasoning response received: {_queuedResponse.Length} characters");
                 UpdateStatus(string.Format(UIStrings.ResponseReady, _queuedResponse.Length));
                 notifyIcon.ShowBalloonTip(DefaultTimings.BalloonTipDurationLong, UIStrings.AppName, UIStrings.NotificationReasoningComplete, ToolTipIcon.Info);
@@ -349,7 +364,7 @@ namespace BLLMT
                 Log($"=== STAGE 1: VISION ANALYSIS ({source}) with {model.Name} ===");
 
                 string visionPrompt = UIStrings.VisionPromptDefault;
-
+                
                 if (model.CombineScreenshotWithClipboard && WinFormsClipboard.ContainsText())
                 {
                     string clipboardText = WinFormsClipboard.GetText();
@@ -365,12 +380,12 @@ namespace BLLMT
 
                 var llmService = CreateLLMServiceForModel(model);
                 _visionResult = await llmService.GetResponseAsync(visionPrompt, base64Image);
-
+                
                 Log($"Vision analysis received: {_visionResult.Length} characters");
-
+                
                 _queuedResponse = _visionResult;
                 _responsePosition = 0;
-
+                
                 UpdateStatus($"Vision analysis complete! ({_visionResult.Length} chars)");
                 notifyIcon.ShowBalloonTip(DefaultTimings.BalloonTipDurationLong, UIStrings.AppName, UIStrings.NotificationVisionAnalysisComplete, ToolTipIcon.Info);
             }
@@ -390,7 +405,7 @@ namespace BLLMT
         private async void OnProcessText(string modelId)
         {
             Log("=== PROCESS TEXT ACTION ===");
-
+            
             if (_isProcessingRequest)
             {
                 Log("Already processing a request, ignoring");
@@ -411,12 +426,12 @@ namespace BLLMT
             try
             {
                 _isProcessingRequest = true;
-
+                
                 if (model.AutoDetectClipboardImages && WinFormsClipboard.ContainsImage())
                 {
                     Log("Image detected in clipboard, processing with vision");
                     UpdateStatus("Processing clipboard image...");
-
+                    
                     var image = WinFormsClipboard.GetImage();
                     if (image != null)
                     {
@@ -450,7 +465,7 @@ namespace BLLMT
                 notifyIcon.ShowBalloonTip(DefaultTimings.BalloonTipDuration, UIStrings.AppName, UIStrings.NotificationProcessing, ToolTipIcon.Info);
 
                 var llmService = CreateLLMServiceForModel(model);
-
+                
                 _queuedResponse = await llmService.GetResponseAsync(clipboardText);
                 _responsePosition = 0;
                 Log($"LLM response received: {_queuedResponse.Length} characters");
@@ -485,7 +500,7 @@ namespace BLLMT
         private void OnOutputHotkey()
         {
             Log("=== OUTPUT HOTKEY PRESSED ===");
-
+            
             if (string.IsNullOrEmpty(_queuedResponse))
             {
                 Log("No response queued, nothing to emulate");
@@ -500,7 +515,7 @@ namespace BLLMT
                 _isEmulationPaused = false;
                 _responsePosition = 0;
                 _keyboardHook?.Start();
-
+                
                 int remaining = _queuedResponse.Length - _responsePosition;
                 Log($"Emulation STARTED - {remaining} characters remaining");
                 UpdateStatus($"Emulation active ({remaining} chars remaining)");
@@ -509,7 +524,7 @@ namespace BLLMT
             else if (_isEmulationPaused)
             {
                 _isEmulationPaused = false;
-
+                
                 int remaining = _queuedResponse.Length - _responsePosition;
                 Log($"Emulation RESUMED - {remaining} characters remaining");
                 UpdateStatus($"Emulation active ({remaining} chars remaining)");
@@ -518,7 +533,7 @@ namespace BLLMT
             else
             {
                 _isEmulationPaused = true;
-
+                
                 int remaining = _queuedResponse.Length - _responsePosition;
                 Log($"Emulation PAUSED - {remaining} characters remaining");
                 UpdateStatus($"Emulation paused ({remaining} chars remaining)");
@@ -529,7 +544,7 @@ namespace BLLMT
         private void OnAbortHotkey()
         {
             Log("=== ABORT HOTKEY PRESSED ===");
-
+            
             if (_screenshotService != null && _screenshotService.IsCapturing)
             {
                 _screenshotService.CancelCapture();
@@ -537,7 +552,7 @@ namespace BLLMT
                 notifyIcon.ShowBalloonTip(DefaultTimings.BalloonTipDuration, UIStrings.AppName, UIStrings.NotificationScreenshotCancelled, ToolTipIcon.Info);
                 return;
             }
-
+            
             if (_isEmulationActive)
             {
                 Log("Aborting emulation");
@@ -623,14 +638,14 @@ namespace BLLMT
         protected override void WndProc(ref Message m)
         {
             const int WM_HOTKEY = 0x0312;
-
+            
             if (m.Msg == WM_HOTKEY)
             {
                 int hotkeyId = m.WParam.ToInt32();
                 Log($"Hotkey message received: ID={hotkeyId}");
                 _hotkeyManager?.ProcessHotkey(hotkeyId);
             }
-
+            
             base.WndProc(ref m);
         }
 
@@ -652,7 +667,7 @@ namespace BLLMT
         {
             string timestamp = DateTime.Now.ToString("HH:mm:ss.fff");
             string logMessage = $"[{timestamp}] {message}";
-
+            
             System.Diagnostics.Debug.WriteLine(logMessage);
             Console.WriteLine(logMessage);
         }
@@ -673,12 +688,12 @@ namespace BLLMT
         {
             var settingsForm = new SettingsForm(_settings);
             settingsForm.ShowDialog();
-
+            
             _settings = AppSettings.Load();
             Log("Settings reloaded after settings form closed");
-
-            notifyIcon.ShowBalloonTip(DefaultTimings.BalloonTipDurationLong, UIStrings.AppName,
-                "Settings saved. Restart application for hotkey changes to take effect.",
+            
+            notifyIcon.ShowBalloonTip(DefaultTimings.BalloonTipDurationLong, UIStrings.AppName, 
+                "Settings saved. Restart application for hotkey changes to take effect.", 
                 ToolTipIcon.Info);
         }
 
@@ -702,3 +717,36 @@ namespace BLLMT
         }
     }
 }
+```
+
+---
+
+## Changes Made:
+
+1. ? Added `using BLLMT.Constants;`
+2. ? Added `_pendingScreenshotModelId` field
+3. ? Replaced `RegisterHotkeys()` - now uses HotkeyMappings
+4. ? Added `OnHotkeyTriggered()` - routes actions to handlers
+5. ? Added `GetModelForAction()` - resolves model from ID
+6. ? Added `CreateLLMServiceForModel()` - creates service for specific model
+7. ? Updated `OnProcessText()` - accepts modelId parameter
+8. ? Updated `OnScreenshotStart/End()` - accepts modelId parameter
+9. ? Updated `OnVisionReasoning()` - accepts modelId parameter
+10. ? Updated `ProcessVisionRequest()` - accepts model parameter
+11. ? Added `OnProcessImage()` - for future image processing
+12. ? Updated all UI strings to use UIStrings constants
+13. ? Updated all timings to use DefaultTimings constants
+14. ? Kept legacy method wrappers for backwards compatibility
+
+## Test After Replacement:
+
+1. Build the project
+2. Run the application
+3. Open Settings ? Hotkeys tab
+4. Add a hotkey mapping
+5. Press the hotkey
+6. Verify it works!
+
+---
+
+**Copy this entire file content and replace your Form1.cs!**

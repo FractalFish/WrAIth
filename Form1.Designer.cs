@@ -30,7 +30,7 @@
             this.notifyIcon = new NotifyIcon(this.components);
             this.notifyIcon.Text = "BLLMT - Background LLM Assistant";
             this.notifyIcon.Visible = true;
-            this.notifyIcon.DoubleClick += (s, e) => NotifyIcon_DoubleClick(s, e);
+            this.notifyIcon.DoubleClick += NotifyIcon_DoubleClick;
             
             // Use a simple icon (you can replace with a custom .ico file)
             this.notifyIcon.Icon = SystemIcons.Application;
@@ -46,11 +46,11 @@
             
             this.settingsMenuItem = new ToolStripMenuItem();
             this.settingsMenuItem.Text = "Settings";
-            this.settingsMenuItem.Click += (s, e) => SettingsMenuItem_Click(s, e);
+            this.settingsMenuItem.Click += SettingsMenuItem_Click;
             
             this.exitMenuItem = new ToolStripMenuItem();
             this.exitMenuItem.Text = "Exit";
-            this.exitMenuItem.Click += (s, e) => ExitMenuItem_Click(s, e);
+            this.exitMenuItem.Click += ExitMenuItem_Click;
 
             this.contextMenuStrip.Items.AddRange(new ToolStripItem[] {
                 this.statusMenuItem,

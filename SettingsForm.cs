@@ -1,9 +1,14 @@
+using System.Windows.Forms;
+using BLLMT.Constants;
+
 namespace BLLMT
 {
     public partial class SettingsForm : Form
     {
         private readonly AppSettings _settings;
         private ModelConfig? _selectedModel = null;
+        private HotkeyMapping? _selectedMapping = null;
+        private bool _isEditingMapping = false;
         private Dictionary<string, string> _originalApiKeys = new Dictionary<string, string>();
         private bool _isUpdatingList = false; // Prevent recursion
 
@@ -18,6 +23,9 @@ namespace BLLMT
         {
             // Load models into list
             RefreshModelsList();
+            
+            // Load hotkey mappings
+            LoadHotkeyMappings();
             
             // Load global options only (no system prompt)
             nudTypingDelay.Value = _settings.TypingDelayMs;
@@ -41,8 +49,6 @@ namespace BLLMT
                     string displayName = model.Name;
                     if (model.IsDefault)
                         displayName += " [DEFAULT]";
-                    if (model.SupportsVision)
-                        displayName += " ??";
                     
                     lstModels.Items.Add(displayName);
                     cmbChainToModel.Items.Add(model.Name);
@@ -102,21 +108,13 @@ namespace BLLMT
             try
             {
                 txtModelName.Text = model.Name ?? string.Empty;
-                cmbProvider.Text = model.Provider ?? "OpenAI";
+                cmbProvider.Text = model.Provider ?? ProviderTypes.OpenAI;
+                btnEditCustomFormat.Visible = (model.Provider == ProviderTypes.Custom);
                 txtApiKey.Text = model.ApiKey ?? string.Empty;
                 txtModel.Text = model.Model ?? string.Empty;
                 txtEndpoint.Text = model.Endpoint ?? string.Empty;
-                chkSupportsVision.Checked = model.SupportsVision;
                 txtSystemPrompt.Text = model.SystemPrompt ?? string.Empty;
                 
-                // Load per-model hotkeys
-                txtTriggerHotkey.SetHotkeyString(model.TriggerHotkey ?? string.Empty);
-                txtScreenshotStartHotkey.SetHotkeyString(model.ScreenshotStartHotkey ?? string.Empty);
-                txtScreenshotEndHotkey.SetHotkeyString(model.ScreenshotEndHotkey ?? string.Empty);
-                txtAnalyzeScreenshotHotkey.SetHotkeyString(model.AnalyzeScreenshotHotkey ?? string.Empty);
-                txtAppendVisionHotkey.SetHotkeyString(model.AppendVisionHotkey ?? string.Empty);
-                txtOutputHotkey.SetHotkeyString(model.OutputHotkey ?? string.Empty);
-                txtAbortHotkey.SetHotkeyString(model.AbortHotkey ?? string.Empty);
                 
                 // Load model chaining
                 if (string.IsNullOrEmpty(model.ChainToModelId))
@@ -180,17 +178,8 @@ namespace BLLMT
                 
                 _selectedModel.Model = txtModel.Text;
                 _selectedModel.Endpoint = txtEndpoint.Text;
-                _selectedModel.SupportsVision = chkSupportsVision.Checked;
                 _selectedModel.SystemPrompt = txtSystemPrompt.Text;
                 
-                // Save per-model hotkeys
-                _selectedModel.TriggerHotkey = txtTriggerHotkey.GetHotkeyString();
-                _selectedModel.ScreenshotStartHotkey = txtScreenshotStartHotkey.GetHotkeyString();
-                _selectedModel.ScreenshotEndHotkey = txtScreenshotEndHotkey.GetHotkeyString();
-                _selectedModel.AnalyzeScreenshotHotkey = txtAnalyzeScreenshotHotkey.GetHotkeyString();
-                _selectedModel.AppendVisionHotkey = txtAppendVisionHotkey.GetHotkeyString();
-                _selectedModel.OutputHotkey = txtOutputHotkey.GetHotkeyString();
-                _selectedModel.AbortHotkey = txtAbortHotkey.GetHotkeyString();
                 
                 // Save model chaining
                 if (cmbChainToModel.SelectedIndex > 0) // Not "(None)"
@@ -229,10 +218,9 @@ namespace BLLMT
             var newModel = new ModelConfig
             {
                 Name = $"New Model {_settings.Models.Count + 1}",
-                Provider = "OpenAI",
-                Model = "gpt-4o-mini",
-                Endpoint = "https://api.openai.com/v1/chat/completions",
-                SupportsVision = false,
+                Provider = ProviderTypes.OpenAI,
+                Model = DefaultModels.OpenAI_GPT4oMini,
+                Endpoint = DefaultEndpoints.OpenAI,
                 IsDefault = false
             };
             
@@ -246,8 +234,8 @@ namespace BLLMT
             if (lstModels.SelectedIndex >= 0 && _settings.Models.Count > 1)
             {
                 var result = MessageBox.Show(
-                    "Are you sure you want to remove this model?",
-                    "Confirm Delete",
+                    UIStrings.ConfirmDeleteModel,
+                    UIStrings.ConfirmDeleteTitle,
                     MessageBoxButtons.YesNo,
                     MessageBoxIcon.Warning);
                 
@@ -261,7 +249,7 @@ namespace BLLMT
             }
             else if (_settings.Models.Count <= 1)
             {
-                MessageBox.Show("Cannot remove the last model.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(UIStrings.ErrorCannotRemoveLastModel, UIStrings.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -286,17 +274,39 @@ namespace BLLMT
         {
             string provider = cmbProvider.Text;
             
-            if (provider == "OpenAI")
+            // Show/hide Edit Format button
+            btnEditCustomFormat.Visible = (provider == ProviderTypes.Custom);
+            
+            if (provider == ProviderTypes.OpenAI)
             {
-                txtEndpoint.Text = "https://api.openai.com/v1/chat/completions";
+                txtEndpoint.Text = DefaultEndpoints.OpenAI;
             }
-            else if (provider == "Anthropic")
+            else if (provider == ProviderTypes.Anthropic)
             {
-                txtEndpoint.Text = "https://api.anthropic.com/v1/messages";
+                txtEndpoint.Text = DefaultEndpoints.Anthropic;
             }
-            else if (provider == "Groq")
+            else if (provider == ProviderTypes.Groq)
             {
-                txtEndpoint.Text = "https://api.groq.com/openai/v1/chat/completions";
+                txtEndpoint.Text = DefaultEndpoints.Groq;
+            }
+        }
+
+        private void BtnEditCustomFormat_Click(object? sender, EventArgs e)
+        {
+            if (_selectedModel == null) return;
+
+            // Initialize custom format if null
+            if (_selectedModel.CustomApiFormat == null)
+            {
+                _selectedModel.CustomApiFormat = new CustomApiFormat();
+            }
+
+            var editor = new CustomFormatEditorForm(_selectedModel.CustomApiFormat);
+            if (editor.ShowDialog() == DialogResult.OK)
+            {
+                _selectedModel.CustomApiFormat = editor.Format;
+                lblStatus.ForeColor = Color.Green;
+                lblStatus.Text = UIStrings.CustomFormatSaved;
             }
         }
 
@@ -308,7 +318,7 @@ namespace BLLMT
             SaveCurrentModel();
             
             lblStatus.ForeColor = Color.Blue;
-            lblStatus.Text = "Testing model connection...";
+            lblStatus.Text = UIStrings.StatusTestingModel;
             btnTestModel.Enabled = false;
 
             try
@@ -321,25 +331,15 @@ namespace BLLMT
 
                 var llmService = new LLMService(testSettings);
                 
-                if (_selectedModel.SupportsVision)
-                {
-                    // Test with a simple image
-                    string testImage = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8DwHwAFBQIAX8jx0gAAAABJRU5ErkJggg==";
-                    var response = await llmService.GetResponseAsync("What color is this image?", testImage);
-                    lblStatus.ForeColor = Color.Green;
-                    lblStatus.Text = $"Vision test success! Response: {response.Substring(0, Math.Min(80, response.Length))}...";
-                }
-                else
-                {
-                    var response = await llmService.GetResponseAsync("Say 'Hello!' if you can read this.");
-                    lblStatus.ForeColor = Color.Green;
-                    lblStatus.Text = $"Test success! Response: {response.Substring(0, Math.Min(80, response.Length))}...";
-                }
+                // Always test with text - simple and universal
+                var response = await llmService.GetResponseAsync(UIStrings.TestQueryText);
+                lblStatus.ForeColor = Color.Green;
+                lblStatus.Text = string.Format(UIStrings.TestSuccess, response.Substring(0, Math.Min(80, response.Length)));
             }
             catch (Exception ex)
             {
                 lblStatus.ForeColor = Color.Red;
-                lblStatus.Text = $"Test failed: {ex.Message}";
+                lblStatus.Text = string.Format(UIStrings.ErrorTestFailed, ex.Message);
             }
             finally
             {
@@ -371,9 +371,9 @@ namespace BLLMT
                 _settings.Save();
 
                 lblStatus.ForeColor = Color.Green;
-                lblStatus.Text = "Settings saved! Restart application for changes to take effect.";
+                lblStatus.Text = UIStrings.SettingsSaved;
 
-                Task.Delay(2000).ContinueWith(_ => 
+                Task.Delay(DefaultTimings.SettingsAutoCloseDelayMs).ContinueWith(_ => 
                 {
                     if (!IsDisposed)
                     {
@@ -384,7 +384,7 @@ namespace BLLMT
             catch (Exception ex)
             {
                 lblStatus.ForeColor = Color.Red;
-                lblStatus.Text = $"Error saving: {ex.Message}";
+                lblStatus.Text = string.Format(UIStrings.ErrorSavingSettings, ex.Message);
             }
         }
 
@@ -392,5 +392,283 @@ namespace BLLMT
         {
             this.Close();
         }
+
+        #region Hotkey Management Methods
+
+        private void LoadHotkeyMappings()
+        {
+            // Populate model dropdown for hotkey edit
+            cmbHotkeyModel.Items.Clear();
+            cmbHotkeyModel.Items.Add(HotkeyActions.ModelGlobal);
+            cmbHotkeyModel.Items.Add(HotkeyActions.ModelCurrent);
+            foreach (var model in _settings.Models)
+            {
+                cmbHotkeyModel.Items.Add(model.Name);
+            }
+
+            // Populate action dropdown
+            cmbHotkeyAction.Items.Clear();
+            foreach (var action in HotkeyActions.All)
+            {
+                cmbHotkeyAction.Items.Add(HotkeyActions.GetDisplayName(action));
+            }
+
+            RefreshHotkeyMappingsList();
+        }
+
+        private void RefreshHotkeyMappingsList()
+        {
+            int selectedIndex = lstHotkeyMappings.SelectedIndex;
+            lstHotkeyMappings.Items.Clear();
+
+            var mappings = _settings.HotkeyMappings.OrderBy(m => m.DisplayOrder).ToList();
+            foreach (var mapping in mappings)
+            {
+                lstHotkeyMappings.Items.Add(mapping);
+            }
+
+            // Restore selection
+            if (selectedIndex >= 0 && selectedIndex < lstHotkeyMappings.Items.Count)
+                lstHotkeyMappings.SelectedIndex = selectedIndex;
+        }
+
+        private void LstHotkeyMappings_SelectedIndexChanged(object? sender, EventArgs e)
+        {
+            if (lstHotkeyMappings.SelectedIndex >= 0 && 
+                lstHotkeyMappings.SelectedIndex < _settings.HotkeyMappings.Count)
+            {
+                _selectedMapping = _settings.HotkeyMappings[lstHotkeyMappings.SelectedIndex];
+                btnEditHotkey.Enabled = true;
+                btnRemoveHotkey.Enabled = true;
+                btnMoveUp.Enabled = lstHotkeyMappings.SelectedIndex > 0;
+                btnMoveDown.Enabled = lstHotkeyMappings.SelectedIndex < lstHotkeyMappings.Items.Count - 1;
+            }
+            else
+            {
+                _selectedMapping = null;
+                btnEditHotkey.Enabled = false;
+                btnRemoveHotkey.Enabled = false;
+                btnMoveUp.Enabled = false;
+                btnMoveDown.Enabled = false;
+            }
+        }
+
+        private void LstHotkeyMappings_DrawItem(object? sender, DrawItemEventArgs e)
+        {
+            if (e.Index < 0 || e.Index >= _settings.HotkeyMappings.Count) return;
+
+            var mapping = _settings.HotkeyMappings[e.Index];
+            e.DrawBackground();
+
+            Color textColor = mapping.IsEnabled ? e.ForeColor : Color.Gray;
+            using (Brush brush = new SolidBrush(textColor))
+            {
+                string text = mapping.GetDisplayString(_settings);
+                if (!mapping.IsEnabled)
+                    text += " [DISABLED]";
+                    
+                e.Graphics.DrawString(text, e.Font, brush, e.Bounds);
+            }
+
+            e.DrawFocusRectangle();
+        }
+
+        private void BtnAddHotkey_Click(object? sender, EventArgs e)
+        {
+            _isEditingMapping = false;
+            _selectedMapping = new HotkeyMapping
+            {
+                DisplayOrder = _settings.HotkeyMappings.Count
+            };
+
+            // Set defaults
+            cmbHotkeyModel.SelectedIndex = 0; // (Global)
+            cmbHotkeyAction.SelectedIndex = 0; // First action
+            txtHotkeyEdit.ClearHotkey();
+            txtHotkeyDescription.Text = string.Empty;
+            chkHotkeyEnabled.Checked = true;
+
+            pnlHotkeyEdit.Visible = true;
+            lblStatus.Text = "Add new hotkey mapping";
+        }
+
+        private void BtnEditHotkey_Click(object? sender, EventArgs e)
+        {
+            if (_selectedMapping == null) return;
+
+            _isEditingMapping = true;
+            LoadMappingToEditPanel(_selectedMapping);
+            pnlHotkeyEdit.Visible = true;
+            lblStatus.Text = $"Editing: {_selectedMapping.GetDisplayString(_settings)}";
+        }
+
+        private void LoadMappingToEditPanel(HotkeyMapping mapping)
+        {
+            // Set hotkey
+            txtHotkeyEdit.SetHotkeyString(mapping.Hotkey);
+
+            // Set model
+            if (mapping.ModelId == HotkeyActions.ModelGlobal)
+            {
+                cmbHotkeyModel.SelectedIndex = 0;
+            }
+            else if (mapping.ModelId == HotkeyActions.ModelCurrent)
+            {
+                cmbHotkeyModel.SelectedIndex = 1;
+            }
+            else
+            {
+                var model = _settings.GetModelById(mapping.ModelId);
+                if (model != null)
+                {
+                    int index = cmbHotkeyModel.Items.IndexOf(model.Name);
+                    cmbHotkeyModel.SelectedIndex = index >= 0 ? index : 0;
+                }
+            }
+
+            // Set action
+            string actionDisplay = HotkeyActions.GetDisplayName(mapping.Action);
+            int actionIndex = cmbHotkeyAction.Items.IndexOf(actionDisplay);
+            cmbHotkeyAction.SelectedIndex = actionIndex >= 0 ? actionIndex : 0;
+
+            // Set other properties
+            txtHotkeyDescription.Text = mapping.Description;
+            chkHotkeyEnabled.Checked = mapping.IsEnabled;
+        }
+
+        private void BtnSaveHotkey_Click(object? sender, EventArgs e)
+        {
+            if (_selectedMapping == null) return;
+
+            try
+            {
+                // Get hotkey
+                string hotkey = txtHotkeyEdit.GetHotkeyString();
+                if (string.IsNullOrWhiteSpace(hotkey))
+                {
+                    lblStatus.ForeColor = Color.Red;
+                    lblStatus.Text = "Hotkey cannot be empty";
+                    return;
+                }
+
+                // Get model ID
+                string modelId = HotkeyActions.ModelGlobal;
+                if (cmbHotkeyModel.SelectedIndex == 1)
+                {
+                    modelId = HotkeyActions.ModelCurrent;
+                }
+                else if (cmbHotkeyModel.SelectedIndex > 1)
+                {
+                    string modelName = cmbHotkeyModel.SelectedItem?.ToString() ?? string.Empty;
+                    var model = _settings.Models.FirstOrDefault(m => m.Name == modelName);
+                    if (model != null)
+                        modelId = model.Id;
+                }
+
+                // Get action
+                string actionDisplay = cmbHotkeyAction.SelectedItem?.ToString() ?? string.Empty;
+                string action = HotkeyActions.All.FirstOrDefault(a => 
+                    HotkeyActions.GetDisplayName(a) == actionDisplay) ?? HotkeyActions.ProcessText;
+
+                // Update mapping
+                _selectedMapping.Hotkey = hotkey;
+                _selectedMapping.ModelId = modelId;
+                _selectedMapping.Action = action;
+                _selectedMapping.Description = txtHotkeyDescription.Text;
+                _selectedMapping.IsEnabled = chkHotkeyEnabled.Checked;
+
+                // Validate
+                string? validationError = HotkeyMappingManager.ValidateMapping(
+                    _selectedMapping, 
+                    _settings, 
+                    _isEditingMapping ? _selectedMapping.Id : null);
+
+                if (validationError != null)
+                {
+                    lblStatus.ForeColor = Color.Red;
+                    lblStatus.Text = validationError;
+                    return;
+                }
+
+                // Add if new
+                if (!_isEditingMapping)
+                {
+                    _settings.HotkeyMappings.Add(_selectedMapping);
+                }
+
+                // Refresh and hide panel
+                RefreshHotkeyMappingsList();
+                pnlHotkeyEdit.Visible = false;
+                _selectedMapping = null;
+                _isEditingMapping = false;
+
+                lblStatus.ForeColor = Color.Green;
+                lblStatus.Text = "Hotkey mapping saved";
+            }
+            catch (Exception ex)
+            {
+                lblStatus.ForeColor = Color.Red;
+                lblStatus.Text = $"Error saving hotkey: {ex.Message}";
+            }
+        }
+
+        private void BtnCancelHotkey_Click(object? sender, EventArgs e)
+        {
+            pnlHotkeyEdit.Visible = false;
+            _selectedMapping = null;
+            _isEditingMapping = false;
+            lblStatus.Text = string.Empty;
+        }
+
+        private void BtnRemoveHotkey_Click(object? sender, EventArgs e)
+        {
+            if (_selectedMapping == null) return;
+
+            var result = MessageBox.Show(
+                $"Remove hotkey mapping:\n{_selectedMapping.GetDisplayString(_settings)}?",
+                "Confirm Remove",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (result == DialogResult.Yes)
+            {
+                _settings.HotkeyMappings.Remove(_selectedMapping);
+                _selectedMapping = null;
+                RefreshHotkeyMappingsList();
+                lblStatus.ForeColor = Color.Green;
+                lblStatus.Text = "Hotkey mapping removed";
+            }
+        }
+
+        private void BtnMoveUp_Click(object? sender, EventArgs e)
+        {
+            if (_selectedMapping == null) return;
+
+            if (HotkeyMappingManager.MoveUp(_settings.HotkeyMappings, _selectedMapping.Id))
+            {
+                RefreshHotkeyMappingsList();
+                // Maintain selection
+                int newIndex = lstHotkeyMappings.SelectedIndex - 1;
+                if (newIndex >= 0)
+                    lstHotkeyMappings.SelectedIndex = newIndex;
+            }
+        }
+
+        private void BtnMoveDown_Click(object? sender, EventArgs e)
+        {
+            if (_selectedMapping == null) return;
+
+            if (HotkeyMappingManager.MoveDown(_settings.HotkeyMappings, _selectedMapping.Id))
+            {
+                RefreshHotkeyMappingsList();
+                // Maintain selection
+                int newIndex = lstHotkeyMappings.SelectedIndex + 1;
+                if (newIndex < lstHotkeyMappings.Items.Count)
+                    lstHotkeyMappings.SelectedIndex = newIndex;
+            }
+        }
+
+        #endregion
     }
 }
+

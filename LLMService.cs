@@ -2,6 +2,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Net.Http.Headers;
+using BLLMT.Constants;
 
 namespace BLLMT
 {
@@ -40,7 +41,7 @@ namespace BLLMT
 
             // Log which model is being used
             string keyPreview = string.IsNullOrEmpty(model.ApiKey) ? "EMPTY" : $"{model.ApiKey.Substring(0, Math.Min(8, model.ApiKey.Length))}...";
-            Log($"Using model: {model.Name} (Provider={model.Provider}, Model={model.Model}, Vision={model.SupportsVision}, Key={keyPreview})");
+            Log($"Using model: {model.Name} (Provider={model.Provider}, Model={model.Model}, Key={keyPreview})");
             Log($"Endpoint: {model.Endpoint}");
 
             if (string.IsNullOrWhiteSpace(model.ApiKey))
@@ -51,13 +52,13 @@ namespace BLLMT
             try
             {
                 // Build request based on provider
-                if (model.Provider.Equals("OpenAI", StringComparison.OrdinalIgnoreCase) ||
-                    model.Provider.Equals("Groq", StringComparison.OrdinalIgnoreCase) ||
-                    model.Provider.Equals("Custom", StringComparison.OrdinalIgnoreCase))
+                if (model.Provider.Equals(ProviderTypes.OpenAI, StringComparison.OrdinalIgnoreCase) ||
+                    model.Provider.Equals(ProviderTypes.Groq, StringComparison.OrdinalIgnoreCase) ||
+                    model.Provider.Equals(ProviderTypes.Custom, StringComparison.OrdinalIgnoreCase))
                 {
                     return await GetOpenAIResponseAsync(userMessage, base64Image, model);
                 }
-                else if (model.Provider.Equals("Anthropic", StringComparison.OrdinalIgnoreCase))
+                else if (model.Provider.Equals(ProviderTypes.Anthropic, StringComparison.OrdinalIgnoreCase))
                 {
                     return await GetAnthropicResponseAsync(userMessage, base64Image, model);
                 }
