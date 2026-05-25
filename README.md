@@ -2,11 +2,6 @@
 
 A **cross-platform** background application that listens for hotkey inputs, processes clipboard content through an LLM (Large Language Model), and types responses in a human-like manner.
 
-## ?? Cross-Platform Support
-
-- ? **Windows** (Windows 10/11)
-- ? **macOS** (Big Sur 11.0+, Intel & Apple Silicon)
-- ?? **Linux** (planned)
 
 ## Features
 
