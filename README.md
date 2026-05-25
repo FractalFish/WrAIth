@@ -240,6 +240,10 @@ This architecture allows the same business logic to run on both platforms while 
 - [DISTRIBUTION-STRATEGY.md](DISTRIBUTION-STRATEGY.md) - Distribution options
 - [TERMS.md](TERMS.md) - Terms of Use
 
+
+## Related Projects
+
+- **[WrAIth Extension](https://github.com/FractalFish/WrAIth-Extension)** - Browser companion for WrAIth. Same hotkey workflow, directly in Chrome.
 ## License
 
 MIT License - see [LICENSE](LICENSE) file for details.
