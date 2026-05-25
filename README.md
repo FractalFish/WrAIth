@@ -1,7 +1,9 @@
 # BLLMT - Background LLM Typing Assistant
 
-A **cross-platform** background application that listens for hotkey inputs, processes clipboard content through an LLM (Large Language Model), and types responses in a human-like manner.
+A **cross-platform** background application that listens for hotkey inputs, processes clipboard content through an LLM (Large Language Model), and outputs responses at a natural, configurable pace.
 
+
+> **Responsible Use**: BLLMT is a productivity and accessibility tool. Use it only in contexts where AI assistance is permitted. See [TERMS.md](TERMS.md) for full usage terms.
 
 ## Features
 
@@ -11,7 +13,7 @@ A **cross-platform** background application that listens for hotkey inputs, proc
   - Output hotkey: Types the LLM response character-by-character
   - Abort hotkey: Cancels the current operation
 - **LLM Integration**: Supports OpenAI, Anthropic, Groq, and custom APIs
-- **Human-like Typing**: Emulates natural typing with configurable delays and variations
+- **Smooth Output**: Types responses at a natural, configurable pace rather than pasting all at once
 - **Screenshot Support**: Capture screen regions and send to vision models
 - **Model Chaining**: Chain multiple models together (e.g., vision ? reasoning)
 - **Multi-Model Support**: Configure multiple models with different hotkeys
@@ -187,6 +189,12 @@ brew install bllmt
 
 See [README-macOS.md](README-macOS.md) for detailed macOS troubleshooting.
 
+
+## Responsible Use
+
+BLLMT is designed for legitimate productivity and accessibility use cases — helping users who benefit from AI-assisted drafting, people with motor impairments, or anyone who wants a faster personal writing workflow.
+
+Using this tool to cheat in job interviews, academic exams, or any context where AI assistance is prohibited is a violation of the [Terms of Use](TERMS.md) and solely the user's responsibility. The author(s) do not condone or support such use.
 ## Architecture
 
 The application now uses a **cross-platform architecture**:
@@ -230,6 +238,7 @@ This architecture allows the same business logic to run on both platforms while 
 - [SETUP-GUIDE.md](SETUP-GUIDE.md) - Comprehensive setup for both platforms
 - [README-macOS.md](README-macOS.md) - macOS-specific information
 - [DISTRIBUTION-STRATEGY.md](DISTRIBUTION-STRATEGY.md) - Distribution options
+- [TERMS.md](TERMS.md) - Terms of Use
 
 ## License
 
