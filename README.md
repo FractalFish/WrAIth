@@ -21,7 +21,7 @@ A background Windows application that listens for hotkey inputs, processes clipb
 
 ## Quick Start
 
-1. Download `Wraith-windows.zip` from [Releases](https://github.com/yourusername/wraith/releases)
+1. Download `Wraith-windows.zip` from [Releases](https://github.com/FractalFish/WrAIth/releases)
 2. Extract and run `Wraith.exe`
 3. Configure settings via system tray icon
 4. Start using!
@@ -92,8 +92,8 @@ Right-click the system tray icon and select **Settings** to configure:
 
 ```bash
 # Clone repository
-git clone https://github.com/yourusername/wraith.git
-cd wraith
+git clone https://github.com/FractalFish/WrAIth.git
+cd WrAIth
 
 dotnet run -f net10.0-windows
 

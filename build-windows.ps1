@@ -83,7 +83,7 @@ If Windows Defender SmartScreen blocks the app:
 
 This is normal for unsigned applications.
 
-For more information, visit: https://github.com/yourusername/wraith
+For more information, visit: https://github.com/FractalFish/WrAIth
 "@
 
 Set-Content -Path ".\publish\windows\README.txt" -Value $readmeContent

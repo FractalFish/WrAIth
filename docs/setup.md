@@ -58,8 +58,8 @@ dotnet publish -f net10.0-windows -c Release
 ### Clone and Build
 
 ```bash
-git clone https://github.com/yourusername/wraith.git
-cd wraith
+git clone https://github.com/FractalFish/WrAIth.git
+cd WrAIth
 
 dotnet build -f net10.0-windows
 ```

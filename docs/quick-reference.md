@@ -127,9 +127,9 @@ this.notifyIcon.Icon = new System.Drawing.Icon("path/to/icon.ico");
 ## Getting Help
 
 1. Check logs (see "View Logs" above)
-2. Search [Issues](https://github.com/yourusername/wraith/issues)
+2. Search [Issues](https://github.com/FractalFish/WrAIth/issues)
 3. Review documentation
-4. Ask in [Discussions](https://github.com/yourusername/wraith/discussions)
+4. Ask in [Discussions](https://github.com/FractalFish/WrAIth/discussions)
 5. Create new issue with:
  - .NET version
  - Windows version
