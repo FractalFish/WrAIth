@@ -58,22 +58,22 @@ Wraith/
 |   +-- quick-reference.md
 |   +-- archive/ (19 old dev docs)
 +-- Constants/
-??? Interfaces/
-??? Platforms/
-??? Services/
-??? [source files]
-??? Wraith-ChromeExtension/ (separate project)
++-- Interfaces/
++-- Platforms/
++-- Services/
++-- [source files]
++-- Wraith-ChromeExtension/ (separate project)
 ```
 
 ---
 
 ## Benefits
 
-? **Clean root** - Only 7 essential files
-? **Organized docs** - docs/ folder with archive
-? **No redundancy** - All build scripts serve different purposes
-? **Easy navigation** - Clear project structure
-? **Git-friendly** - Less clutter in commits
+- **Clean root** - Only 7 essential files
+- **Organized docs** - docs/ folder with archive
+- **No redundancy** - All build scripts serve different purposes
+- **Easy navigation** - Clear project structure
+- **Git-friendly** - Less clutter in commits
 
 ---
 
@@ -102,12 +102,12 @@ Add docs reference:
 Optional: Move source files to src/ for even cleaner root:
 ```
 Wraith/
-??? README.md
-??? Wraith.csproj
-??? src/
-?   ??? Constants/
-?   ??? Interfaces/
-?   ??? [all .cs files]
++-- README.md
++-- Wraith.csproj
++-- src/
+|   +-- Constants/
+|   +-- Interfaces/
+|   +-- [all .cs files]
 ```
 
 ---

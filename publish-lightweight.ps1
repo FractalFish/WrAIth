@@ -76,10 +76,10 @@ if ($LASTEXITCODE -eq 0) {
         Write-Host "File size: $([math]::Round($fileSize, 2)) MB" -ForegroundColor Green
         Write-Host ""
         Write-Host "Features:" -ForegroundColor Cyan
-        Write-Host "  ? Self-contained (.NET 10 embedded)" -ForegroundColor Green
-        Write-Host "  ? Single executable file" -ForegroundColor Green
-        Write-Host "  ? Compressed and optimized" -ForegroundColor Green
-        Write-Host "  ? Ready to run on any Windows 10+ machine" -ForegroundColor Green
+        Write-Host "  - Self-contained (.NET 10 embedded)" -ForegroundColor Green
+        Write-Host "  - Single executable file" -ForegroundColor Green
+        Write-Host "  - Compressed and optimized" -ForegroundColor Green
+        Write-Host "  - Ready to run on any Windows 10+ machine" -ForegroundColor Green
         Write-Host ""
         Write-Host "The .exe is standalone - no installation required!" -ForegroundColor Yellow
     } else {

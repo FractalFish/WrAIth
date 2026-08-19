@@ -123,4 +123,4 @@ if ($createZip -eq "Y" -or $createZip -eq "y") {
 }
 
 Write-Host ""
-Write-Host "Done! ??" -ForegroundColor Green
+Write-Host "Done!" -ForegroundColor Green
