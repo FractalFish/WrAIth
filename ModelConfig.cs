@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace BLLMT
+namespace Wraith
 {
     /// <summary>
     /// Configuration for a single AI model (text or vision)

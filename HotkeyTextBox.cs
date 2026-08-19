@@ -1,4 +1,4 @@
-namespace BLLMT
+namespace Wraith
 {
     public class HotkeyTextBox : TextBox
     {

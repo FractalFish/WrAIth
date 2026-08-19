@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to BLLMT will be documented in this file.
+All notable changes to Wraith will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Planned
-- Global hotkeys system (hotkey ? model + action mapping)
+- Global hotkeys system (hotkey -> model + action mapping)
 - Model presets (built-in and user-defined)
 - Code cleanup and refactoring
 - Remove hardcoded values
@@ -36,8 +36,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - API key masking in UI
 
 ### Changed
-- Renamed "Trigger" hotkey ? "Send Query" for clarity
-- Renamed "Append Vision" ? "Vision + Reasoning" for clarity
+- Renamed "Trigger" hotkey -> "Send Query" for clarity
+- Renamed "Append Vision" -> "Vision + Reasoning" for clarity
 - Removed "Supports Vision" checkbox (now auto-detected)
 - Simplified model testing (always uses text)
 - Provider dropdown now includes "Custom" option
@@ -146,9 +146,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Version Schema
 
 - **Major.Minor.Patch**
-  - **Major**: Breaking changes, major features
-  - **Minor**: New features, non-breaking changes
-  - **Patch**: Bug fixes, documentation
+ - **Major**: Breaking changes, major features
+ - **Minor**: New features, non-breaking changes
+ - **Patch**: Bug fixes, documentation
 
 - **-alpha**: Early development, frequent changes
 - **-beta**: Feature complete, testing phase

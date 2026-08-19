@@ -1,21 +1,21 @@
 # Phase 2 - Session End Summary
 
-## ? Completed Work
+## Completed Work
 
 ### 1. Core Infrastructure (Complete)
-- ? **HotkeyMapping.cs** - Data model with validation
-- ? **HotkeyMappingManager.cs** - Utility class for management
-- ? **AppSettings.cs** - Added HotkeyMappings list + migration logic
-- ? **Build successful** - All infrastructure compiles
+- **HotkeyMapping.cs** - Data model with validation
+- **HotkeyMappingManager.cs** - Utility class for management
+- **AppSettings.cs** - Added HotkeyMappings list + migration logic
+- **Build successful** - All infrastructure compiles
 
 ### 2. UI Started (Partial)
-- ? Hotkeys tab declarations added to SettingsForm.Designer.cs
-- ? Control initialization code added
-- ?? **Issue**: Currently showing old per-model hotkey UI instead of new global system
+- Hotkeys tab declarations added to SettingsForm.Designer.cs
+- Control initialization code added
+- **Issue**: Currently showing old per-model hotkey UI instead of new global system
 
 ---
 
-## ?? Remaining Work
+## Remaining Work
 
 ### Critical Next Steps:
 
@@ -99,7 +99,7 @@ AppSettings
 ```
 
 ### Migration Flow:
-1. On first load ? MigrateToGlobalHotkeys() runs
+1. On first load -> MigrateToGlobalHotkeys() runs
 2. Reads old per-model hotkeys (if they exist)
 3. Creates HotkeyMapping entries for each
 4. Marks Output/Abort as global actions
@@ -148,7 +148,7 @@ Find `RegisterHotkeys()` method and replace with global hotkey logic
 
 ### Step 4: Test!
 1. Load old settings.json (test migration)
-2. Open Settings ? Hotkeys tab
+2. Open Settings -> Hotkeys tab
 3. See migrated mappings
 4. Add new mapping
 5. Test hotkeys work in Form1
@@ -157,17 +157,17 @@ Find `RegisterHotkeys()` method and replace with global hotkey logic
 
 ## Files Status
 
-### ? Complete:
+### Complete:
 - HotkeyMapping.cs
-- HotkeyMappingManager.cs  
+- HotkeyMappingManager.cs
 - AppSettings.cs (with migration)
 - Constants/HotkeyActions.cs
 
-### ? In Progress:
+### In Progress:
 - SettingsForm.Designer.cs (UI needs cleanup)
 - SettingsForm.cs (logic needs implementation)
 
-### ? Not Started:
+### Not Started:
 - Form1.cs (hotkey routing)
 - ModelConfig.cs (cleanup - remove old properties)
 
@@ -189,12 +189,12 @@ Find `RegisterHotkeys()` method and replace with global hotkey logic
 
 **Overall Phase 2**: ~35% Complete
 
-- ? Data model (100%)
-- ? Migration logic (100%)
-- ? Utility class (100%)
-- ? UI (20%)
-- ? Integration (0%)
-- ? Cleanup (0%)
+- Data model (100%)
+- Migration logic (100%)
+- Utility class (100%)
+- UI (20%)
+- Integration (0%)
+- Cleanup (0%)
 
 ---
 
@@ -224,4 +224,4 @@ All current code compiles without errors.
 - No breaking changes to existing code
 - Backwards compatible
 
-**Status**: On track! ??
+**Status**: On track!

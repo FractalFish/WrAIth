@@ -1,7 +1,7 @@
 using System.Windows.Forms;
-using BLLMT.Constants;
+using Wraith.Constants;
 
-namespace BLLMT
+namespace Wraith
 {
     public partial class SettingsForm : Form
     {

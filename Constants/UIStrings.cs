@@ -1,4 +1,4 @@
-namespace BLLMT.Constants
+namespace Wraith.Constants
 {
     /// <summary>
     /// User-facing strings for UI messages and notifications
@@ -6,9 +6,9 @@ namespace BLLMT.Constants
     public static class UIStrings
     {
         #region Application
-        public const string AppName = "BLLMT";
+        public const string AppName = "WrAIth";
         public const string AppFullName = "Background LLM Multi-Tool";
-        public const string TrayIconText = "BLLMT - Background LLM Assistant";
+        public const string TrayIconText = "WrAIth - Background LLM Assistant";
         #endregion
 
         #region Status Messages

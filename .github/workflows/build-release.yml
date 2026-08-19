@@ -10,19 +10,19 @@ jobs:
   build-windows:
     name: Build Windows
     runs-on: windows-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '10.0.x'
-      
+
       - name: Restore dependencies
         run: dotnet restore
-      
+
       - name: Build Windows
         run: |
           dotnet publish -f net10.0-windows `
@@ -32,88 +32,35 @@ jobs:
             -p:PublishSingleFile=true `
             -p:EnableCompressionInSingleFile=true `
             -o .\publish\windows
-      
+
       - name: Create Windows ZIP
         run: |
           $version = "${{ github.ref_name }}"
-          Compress-Archive -Path .\publish\windows\* -DestinationPath "BLLMT-Windows-$version.zip"
-      
+          Compress-Archive -Path .\publish\windows\* -DestinationPath "Wraith-Windows-$version.zip"
+
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v4
         with:
-          name: BLLMT-Windows-${{ github.ref_name }}
-          path: BLLMT-Windows-${{ github.ref_name }}.zip
-
-  build-macos:
-    name: Build macOS
-    runs-on: macos-latest
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '10.0.x'
-      
-      - name: Install MAUI workload
-        run: dotnet workload install maui-maccatalyst
-      
-      - name: Restore dependencies
-        run: dotnet restore
-      
-      - name: Build macOS
-        run: |
-          dotnet publish -f net10.0-maccatalyst \
-            -c Release \
-            --self-contained true \
-            -p:CreatePackage=true \
-            -p:EnableCompressionInSingleFile=true \
-            -o ./publish/macos
-      
-      - name: Create macOS DMG
-        run: |
-          VERSION="${{ github.ref_name }}"
-          APP_PATH=$(find ./publish/macos -name "BLLMT.app" -type d | head -n 1)
-          
-          if [ -n "$APP_PATH" ]; then
-            hdiutil create "BLLMT-macOS-$VERSION.dmg" \
-              -volname "BLLMT" \
-              -srcfolder "$APP_PATH" \
-              -ov \
-              -format UDZO
-          fi
-      
-      - name: Upload macOS artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: BLLMT-macOS-${{ github.ref_name }}
-          path: BLLMT-macOS-${{ github.ref_name }}.dmg
+          name: Wraith-Windows-${{ github.ref_name }}
+          path: Wraith-Windows-${{ github.ref_name }}.zip
 
   create-release:
     name: Create GitHub Release
-    needs: [build-windows, build-macos]
+    needs: [build-windows]
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
-    
+
     steps:
       - name: Download Windows artifact
         uses: actions/download-artifact@v4
         with:
-          name: BLLMT-Windows-${{ github.ref_name }}
-      
-      - name: Download macOS artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: BLLMT-macOS-${{ github.ref_name }}
-      
+          name: Wraith-Windows-${{ github.ref_name }}
+
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            BLLMT-Windows-${{ github.ref_name }}.zip
-            BLLMT-macOS-${{ github.ref_name }}.dmg
+            Wraith-Windows-${{ github.ref_name }}.zip
           draft: false
           prerelease: false
           generate_release_notes: true

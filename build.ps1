@@ -1,6 +1,6 @@
-# BLLMT Build Script (PowerShell)
+# Wraith Build Script (PowerShell)
 Write-Host "========================================" -ForegroundColor Cyan
-Write-Host "BLLMT Build Script" -ForegroundColor Cyan
+Write-Host "Wraith Build Script" -ForegroundColor Cyan
 Write-Host "========================================" -ForegroundColor Cyan
 Write-Host ""
 

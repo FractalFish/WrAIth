@@ -1,4 +1,4 @@
-namespace BLLMT
+namespace Wraith
 {
     // Extension methods for Settings Form
     public static class SettingsFormExtensions

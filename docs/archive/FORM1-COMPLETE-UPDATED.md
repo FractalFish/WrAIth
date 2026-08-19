@@ -4,11 +4,11 @@
 Replace your entire Form1.cs file with the code below.
 
 This version includes:
-- ? Global hotkeys support via HotkeyMappings
-- ? OnHotkeyTriggered() routing method
-- ? Model-based action handlers
-- ? Helper methods for model selection
-- ? All existing functionality preserved
+- Global hotkeys support via HotkeyMappings
+- OnHotkeyTriggered() routing method
+- Model-based action handlers
+- Helper methods for model selection
+- All existing functionality preserved
 
 ---
 
@@ -723,26 +723,26 @@ namespace BLLMT
 
 ## Changes Made:
 
-1. ? Added `using BLLMT.Constants;`
-2. ? Added `_pendingScreenshotModelId` field
-3. ? Replaced `RegisterHotkeys()` - now uses HotkeyMappings
-4. ? Added `OnHotkeyTriggered()` - routes actions to handlers
-5. ? Added `GetModelForAction()` - resolves model from ID
-6. ? Added `CreateLLMServiceForModel()` - creates service for specific model
-7. ? Updated `OnProcessText()` - accepts modelId parameter
-8. ? Updated `OnScreenshotStart/End()` - accepts modelId parameter
-9. ? Updated `OnVisionReasoning()` - accepts modelId parameter
-10. ? Updated `ProcessVisionRequest()` - accepts model parameter
-11. ? Added `OnProcessImage()` - for future image processing
-12. ? Updated all UI strings to use UIStrings constants
-13. ? Updated all timings to use DefaultTimings constants
-14. ? Kept legacy method wrappers for backwards compatibility
+1. -> Added `using BLLMT.Constants;`
+2. -> Added `_pendingScreenshotModelId` field
+3. -> Replaced `RegisterHotkeys()` - now uses HotkeyMappings
+4. -> Added `OnHotkeyTriggered()` - routes actions to handlers
+5. -> Added `GetModelForAction()` - resolves model from ID
+6. -> Added `CreateLLMServiceForModel()` - creates service for specific model
+7. -> Updated `OnProcessText()` - accepts modelId parameter
+8. -> Updated `OnScreenshotStart/End()` - accepts modelId parameter
+9. -> Updated `OnVisionReasoning()` - accepts modelId parameter
+10. -> Updated `ProcessVisionRequest()` - accepts model parameter
+11. -> Added `OnProcessImage()` - for future image processing
+12. -> Updated all UI strings to use UIStrings constants
+13. -> Updated all timings to use DefaultTimings constants
+14. -> Kept legacy method wrappers for backwards compatibility
 
 ## Test After Replacement:
 
 1. Build the project
 2. Run the application
-3. Open Settings ? Hotkeys tab
+3. Open Settings -> Hotkeys tab
 4. Add a hotkey mapping
 5. Press the hotkey
 6. Verify it works!

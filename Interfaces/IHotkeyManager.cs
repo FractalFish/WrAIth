@@ -1,4 +1,4 @@
-namespace BLLMT.Interfaces
+namespace Wraith.Interfaces
 {
     /// <summary>
     /// Platform-specific hotkey manager interface

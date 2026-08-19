@@ -1,78 +1,62 @@
-# Contributing to BLLMT
+# Contributing to Wraith
 
-Thank you for your interest in contributing to BLLMT! This document provides guidelines and instructions for contributing.
+Thank you for your interest in contributing to Wraith! This document provides guidelines and instructions for contributing.
 
-## ?? Getting Started
+## Getting Started
 
 1. **Fork the repository** on GitHub
 2. **Clone your fork** locally:
    ```bash
-   git clone https://github.com/YOUR-USERNAME/bllmt.git
-   cd bllmt
+   git clone https://github.com/YOUR-USERNAME/wraith.git
+   cd wraith
    ```
 3. **Create a branch** for your feature or fix:
    ```bash
    git checkout -b feature/my-new-feature
    ```
 
-## ??? Development Setup
+## Development Setup
 
 ### Prerequisites
 
-**Windows:**
 - Visual Studio 2022 (or later) with .NET 10 workload
-- .NET 10 SDK
-- Git
-
-**macOS:**
-- Xcode 14+ (from App Store)
 - .NET 10 SDK
 - Git
 
 ### Building
 
-**Windows:**
 ```powershell
 dotnet restore
 dotnet build -f net10.0-windows
 dotnet run -f net10.0-windows
 ```
 
-**macOS:**
-```bash
-dotnet restore
-dotnet workload install maui-maccatalyst
-dotnet build -f net10.0-maccatalyst
-dotnet run -f net10.0-maccatalyst
-```
-
-## ?? How to Contribute
+## How to Contribute
 
 ### Reporting Bugs
 
 1. **Check existing issues** to avoid duplicates
 2. **Create a new issue** with:
-   - Clear, descriptive title
-   - Platform (Windows/macOS) and version
-   - Steps to reproduce
-   - Expected vs actual behavior
-   - Screenshots/logs if applicable
-   - .NET version (`dotnet --version`)
+ - Clear, descriptive title
+ - Windows version
+ - Steps to reproduce
+ - Expected vs actual behavior
+ - Screenshots/logs if applicable
+ - .NET version (`dotnet --version`)
 
 ### Suggesting Features
 
 1. **Check existing issues** for similar requests
 2. **Create a new issue** labeled "enhancement" with:
-   - Clear description of the feature
-   - Use case / why it's needed
-   - Proposed implementation (optional)
-   - Platform considerations (Windows/macOS/both)
+ - Clear description of the feature
+ - Use case / why it's needed
+ - Proposed implementation (optional)
 
 ### Submitting Pull Requests
 
 1. **Create an issue first** (unless it's a trivial fix)
 2. **Follow the code style** (see below)
-3. **Test on both platforms** if possible
+3. **Test on Windows**
 4. **Update documentation** if needed
 5. **Write clear commit messages**:
    ```
@@ -83,12 +67,12 @@ dotnet run -f net10.0-maccatalyst
    - Update README with Linux instructions
    ```
 6. **Submit the PR** with:
-   - Reference to the issue it fixes
-   - Description of changes
-   - Testing done (platforms, scenarios)
-   - Screenshots for UI changes
+ - Reference to the issue it fixes
+ - Description of changes
+ - Testing done (scenarios)
+ - Screenshots for UI changes
 
-## ?? Code Style
+## Code Style
 
 ### General Guidelines
 
@@ -111,9 +95,8 @@ When adding platform-specific functionality:
    }
    ```
 
-2. **Implement for each platform**:
-   - `Platforms/Windows/WindowsMyService.cs`
-   - `Platforms/MacCatalyst/MacMyService.cs`
+2. **Implement for Windows**:
+ - `Platforms/Windows/WindowsMyService.cs`
 
 3. **Register in PlatformServiceFactory**:
    ```csharp
@@ -121,8 +104,6 @@ When adding platform-specific functionality:
    {
        #if WINDOWS
            return new WindowsMyService();
-       #elif MACCATALYST
-           return new MacMyService();
        #endif
    }
    ```
@@ -130,24 +111,22 @@ When adding platform-specific functionality:
 ### Code Organization
 
 ```
-BLLMT/
-??? Interfaces/          # Platform abstractions
-??? Services/            # Shared business logic
-??? Platforms/
-?   ??? Windows/        # Windows-specific implementations
-?   ??? MacCatalyst/    # macOS-specific implementations
-??? Models/             # Data models
-??? *.cs               # Shared code
+Wraith/
++-- Interfaces/          # Platform abstractions
++-- Services/            # Shared business logic
++-- Platforms/
+|   +-- Windows/        # Windows-specific implementations
++-- Models/             # Data models
++-- *.cs               # Shared code
 ```
 
 ### Testing
 
-- **Test on your platform** before submitting
-- **Note which platforms tested** in PR description
+- **Test before submitting**
 - **Include edge cases** in testing
 - **Verify error handling** works properly
 
-## ?? Documentation
+## Documentation
 
 Update documentation when adding features:
 
@@ -157,14 +136,14 @@ Update documentation when adding features:
 - **SETUP-GUIDE.md** - For setup changes
 - **Platform-specific READMEs** - For platform-specific features
 
-## ?? Review Process
+## Review Process
 
 1. **Automated checks** run on PR submission
 2. **Maintainer review** (usually within 1-2 days)
 3. **Address feedback** if any changes requested
 4. **Merge** once approved
 
-## ?? Priority Issues
+## Priority Issues
 
 Looking for something to work on? Check issues labeled:
 - `good first issue` - Great for new contributors
@@ -172,14 +151,14 @@ Looking for something to work on? Check issues labeled:
 - `bug` - Something broken
 - `enhancement` - New features
 
-## ?? Recognition
+## Recognition
 
 Contributors are recognized in:
 - GitHub contributors list
 - Release notes (for significant contributions)
 - README (for major features)
 
-## ?? Code of Conduct
+## Code of Conduct
 
 ### Our Standards
 
@@ -196,13 +175,13 @@ Contributors are recognized in:
 - Publishing private information
 - Any conduct that would be inappropriate in a professional setting
 
-## ?? Questions?
+## Questions?
 
 - **General questions**: Open an issue with the "question" label
 - **Security issues**: Email [maintainer email] directly
 - **Platform-specific help**: Check platform-specific README files
 
-## ?? Roadmap
+## Roadmap
 
 Interested in major features? Check our roadmap:
 
@@ -222,12 +201,12 @@ Interested in major features? Check our roadmap:
 
 Want to work on something not listed? Propose it in an issue!
 
-## ?? License
+## License
 
 By contributing, you agree that your contributions will be licensed under the MIT License.
 
 ---
 
-**Thank you for contributing to BLLMT!** ??
+**Thank you for contributing to Wraith!**
 
-Every contribution, no matter how small, helps make BLLMT better for everyone.
+Every contribution, no matter how small, helps make Wraith better for everyone.

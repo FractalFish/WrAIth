@@ -2,33 +2,33 @@
 
 ## Status: **IN PROGRESS** (30% Complete)
 
-### ? Completed Components
+### Completed Components
 
-#### 1. Data Model ?
+#### 1. Data Model
 - **HotkeyMapping.cs** created (118 lines)
-  - Complete data model with validation
-  - Display string generation
-  - Global action detection
-  - JSON serialization support
+ - Complete data model with validation
+ - Display string generation
+ - Global action detection
+ - JSON serialization support
 
-#### 2. AppSettings Integration ?
+#### 2. AppSettings Integration
 - Added `List<HotkeyMapping> HotkeyMappings` property
 - Complete migration logic from per-model to global hotkeys
 - Handles legacy AppSettings hotkeys
 - Uses reflection for backwards compatibility
 - **Build successful!**
 
-#### 3. Utility Class ?
+#### 3. Utility Class
 - **HotkeyMappingManager.cs** created (168 lines)
-  - Find mappings by hotkey, model, or action
-  - Duplicate hotkey detection
-  - Validation with error messages
-  - Reordering and move up/down functionality
-  - Default mapping creation
+ - Find mappings by hotkey, model, or action
+ - Duplicate hotkey detection
+ - Validation with error messages
+ - Reordering and move up/down functionality
+ - Default mapping creation
 
 ---
 
-## ?? Remaining Work (70%)
+## Remaining Work (70%)
 
 ### Next Steps (In Order):
 
@@ -38,11 +38,11 @@
 - [ ] Add Add/Remove/Edit buttons
 - [ ] Add Move Up/Down buttons
 - [ ] Create editing panel with:
-  - Hotkey input (HotkeyTextBox)
-  - Model dropdown (ComboBox)
-  - Action dropdown (ComboBox)
-  - Description textbox
-  - Enabled checkbox
+ - Hotkey input (HotkeyTextBox)
+ - Model dropdown (ComboBox)
+ - Action dropdown (ComboBox)
+ - Description textbox
+ - Enabled checkbox
 
 #### 5. UI Logic (3-4 hours)
 - [ ] Add hotkey management methods to SettingsForm.cs
@@ -91,31 +91,31 @@ HotkeyMappings:
 ```
 
 **Benefits**:
-- ? No conflicts possible (one hotkey = one action)
-- ? See all mappings at a glance
-- ? Flexible (multiple hotkeys ? same model)
-- ? Global actions clearly marked
+- No conflicts possible (one hotkey = one action)
+- See all mappings at a glance
+- Flexible (multiple hotkeys -> same model)
+- Global actions clearly marked
 
 ---
 
 ## Files Created/Modified
 
 ### New Files (3):
-1. ? HotkeyMapping.cs - Data model
-2. ? HotkeyMappingManager.cs - Utility class
-3. ? This progress report
+1. -> HotkeyMapping.cs - Data model
+2. -> HotkeyMappingManager.cs - Utility class
+3. -> This progress report
 
 ### Modified Files (1):
-1. ? AppSettings.cs - Added HotkeyMappings + migration
+1. -> AppSettings.cs - Added HotkeyMappings + migration
 
 ### Files to Modify (3):
-1. ? SettingsForm.Designer.cs - Add Hotkeys tab UI
-2. ? SettingsForm.cs - Add management logic
-3. ? Form1.cs - Use global hotkeys
+1. -> SettingsForm.Designer.cs - Add Hotkeys tab UI
+2. -> SettingsForm.cs - Add management logic
+3. -> Form1.cs - Use global hotkeys
 
 ### Files to Clean Up (2):
-1. ? ModelConfig.cs - Remove per-model hotkey properties
-2. ? SettingsForm.Designer.cs - Remove hotkey UI from Models tab
+1. -> ModelConfig.cs - Remove per-model hotkey properties
+2. -> SettingsForm.Designer.cs - Remove hotkey UI from Models tab
 
 ---
 
@@ -133,20 +133,20 @@ All infrastructure code compiles cleanly.
 
 ### Automatic Migration:
 1. On first load with global hotkeys:
-   - Try to read per-model hotkey properties (if they exist)
-   - Fall back to legacy AppSettings hotkeys
-   - Create HotkeyMapping entries for each
-   - Mark Output/Abort as global actions
+ - Try to read per-model hotkey properties (if they exist)
+ - Fall back to legacy AppSettings hotkeys
+ - Create HotkeyMapping entries for each
+ - Mark Output/Abort as global actions
 
 2. User opens Settings:
-   - Sees new "Hotkeys" tab
-   - All existing hotkeys migrated and visible
-   - Can add/edit/remove freely
+ - Sees new "Hotkeys" tab
+ - All existing hotkeys migrated and visible
+ - Can add/edit/remove freely
 
 3. Backwards Compatibility:
-   - Old per-model hotkeys ignored if HotkeyMappings exist
-   - Migration only runs once
-   - User can still use old settings.json (will auto-migrate)
+ - Old per-model hotkeys ignored if HotkeyMappings exist
+ - Migration only runs once
+ - User can still use old settings.json (will auto-migrate)
 
 ---
 
@@ -165,21 +165,21 @@ All infrastructure code compiles cleanly.
 ## Testing Plan
 
 ### Unit Testing (Manual):
-1. ? HotkeyMapping validation
-2. ? HotkeyMappingManager utilities
-3. ? Migration from legacy hotkeys
-4. ? UI add/edit/remove operations
-5. ? Hotkey conflict detection
-6. ? Form1 hotkey routing
+1. -> HotkeyMapping validation
+2. -> HotkeyMappingManager utilities
+3. -> Migration from legacy hotkeys
+4. -> UI add/edit/remove operations
+5. -> Hotkey conflict detection
+6. -> Form1 hotkey routing
 
 ### Integration Testing:
-1. ? Load old settings.json (test migration)
-2. ? Add new hotkey mapping
-3. ? Edit existing mapping
-4. ? Remove mapping
-5. ? Move up/down
-6. ? Test all actions work
-7. ? Test global vs model-specific actions
+1. -> Load old settings.json (test migration)
+2. -> Add new hotkey mapping
+3. -> Edit existing mapping
+4. -> Remove mapping
+5. -> Move up/down
+6. -> Test all actions work
+7. -> Test global vs model-specific actions
 
 ---
 
@@ -196,20 +196,20 @@ All infrastructure code compiles cleanly.
 
 ## Quality Metrics
 
-### Code Quality: ?????
+### Code Quality:
 - Clean data model
 - Comprehensive validation
 - Well-documented
 - Type-safe
 
-### Architecture: ?????
+### Architecture:
 - Proper separation of concerns
 - Utility class for reusability
 - Migration strategy solid
 - Backwards compatible
 
 ### User Experience: (Not yet implemented)
-- Will be ????? when complete
+- Will be -> when complete
 - Much clearer than per-model hotkeys
 - No conflicts possible
 
@@ -218,11 +218,11 @@ All infrastructure code compiles cleanly.
 ## Conclusion
 
 Phase 2 is off to a strong start! The foundation is solid:
-- ? Data model complete
-- ? Migration logic working
-- ? Utility functions ready
-- ? Build successful
+- Data model complete
+- Migration logic working
+- Utility functions ready
+- Build successful
 
 **Next**: UI and integration work
 
-**Status**: On track for completion! ??
+**Status**: On track for completion!

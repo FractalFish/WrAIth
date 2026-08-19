@@ -1,6 +1,6 @@
-using BLLMT.Constants;
+using Wraith.Constants;
 
-namespace BLLMT
+namespace Wraith
 {
     /// <summary>
     /// Utility class for managing and validating hotkey mappings

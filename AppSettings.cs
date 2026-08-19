@@ -1,7 +1,7 @@
 using System.Text.Json;
-using BLLMT.Constants;
+using Wraith.Constants;
 
-namespace BLLMT
+namespace Wraith
 {
     public class AppSettings
     {
@@ -295,7 +295,7 @@ namespace BLLMT
         {
             string appDataPath = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                "BLLMT");
+                "Wraith");
             Directory.CreateDirectory(appDataPath);
             return Path.Combine(appDataPath, "settings.json");
         }

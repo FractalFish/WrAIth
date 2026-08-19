@@ -1,4 +1,4 @@
-namespace BLLMT
+namespace Wraith
 {
 #if WINDOWS
     internal static class Program

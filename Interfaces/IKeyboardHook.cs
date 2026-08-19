@@ -1,4 +1,4 @@
-namespace BLLMT.Interfaces
+namespace Wraith.Interfaces
 {
     /// <summary>
     /// Platform-specific keyboard hook interface for intercepting keystrokes

@@ -1,4 +1,4 @@
-﻿namespace BLLMT
+﻿namespace Wraith
 {
     partial class Form1
     {
@@ -28,7 +28,7 @@
             
             // NotifyIcon
             this.notifyIcon = new NotifyIcon(this.components);
-            this.notifyIcon.Text = "BLLMT - Background LLM Assistant";
+            this.notifyIcon.Text = "Wraith - Background LLM Assistant";
             this.notifyIcon.Visible = true;
             this.notifyIcon.DoubleClick += NotifyIcon_DoubleClick;
             
@@ -67,7 +67,7 @@
             this.ShowInTaskbar = false;
             this.WindowState = FormWindowState.Minimized;
             this.Opacity = 0;
-            this.Text = "BLLMT";
+            this.Text = "Wraith";
         }
     }
 }

@@ -1,12 +1,12 @@
-# BLLMT Production Build Script (.NET 10)
+# Wraith Production Build Script (.NET 10)
 Write-Host "========================================" -ForegroundColor Cyan
-Write-Host "BLLMT Production Build (.NET 10)" -ForegroundColor Cyan
+Write-Host "Wraith Production Build (.NET 10)" -ForegroundColor Cyan
 Write-Host "========================================" -ForegroundColor Cyan
 Write-Host ""
 
 # Kill any stuck processes
 Write-Host "Cleaning up processes and caches..." -ForegroundColor Yellow
-Get-Process | Where-Object { $_.Name -match "dotnet|NuGet|BLLMT" } | Stop-Process -Force -ErrorAction SilentlyContinue
+Get-Process | Where-Object { $_.Name -match "dotnet|NuGet|Wraith" } | Stop-Process -Force -ErrorAction SilentlyContinue
 Start-Sleep -Seconds 2
 
 # Clean up NuGet lock files and temp directories
@@ -25,7 +25,7 @@ Write-Host "Clearing NuGet caches..." -ForegroundColor Yellow
 dotnet nuget locals all --clear
 
 Write-Host ""
-Write-Host "Building BLLMT for production..." -ForegroundColor Cyan
+Write-Host "Building Wraith for production..." -ForegroundColor Cyan
 Write-Host "Target: .NET 10 (net10.0-windows)" -ForegroundColor Yellow
 Write-Host "Configuration: Single-file, Self-contained, Compressed" -ForegroundColor Yellow
 Write-Host ""
@@ -69,7 +69,7 @@ if ($LASTEXITCODE -eq 0) {
     Write-Host "========================================" -ForegroundColor Green
     Write-Host ""
     
-    $exePath = "bin\Release\net10.0-windows\win-x64\publish\BLLMT.exe"
+    $exePath = "bin\Release\net10.0-windows\win-x64\publish\Wraith.exe"
     if (Test-Path $exePath) {
         $fileSize = (Get-Item $exePath).Length / 1MB
         Write-Host "Executable: $exePath" -ForegroundColor White
@@ -93,7 +93,7 @@ if ($LASTEXITCODE -eq 0) {
     Write-Host ""
     Write-Host "Common issues:" -ForegroundColor Yellow
     Write-Host "  1. Make sure .NET 10 SDK is installed" -ForegroundColor White
-    Write-Host "  2. Close any running instances of BLLMT.exe" -ForegroundColor White
+    Write-Host "  2. Close any running instances of Wraith.exe" -ForegroundColor White
     Write-Host "  3. Run as Administrator if permissions are needed" -ForegroundColor White
 }
 

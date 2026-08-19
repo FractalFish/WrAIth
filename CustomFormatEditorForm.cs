@@ -1,6 +1,6 @@
 using System.Windows.Forms;
 
-namespace BLLMT
+namespace Wraith
 {
     public partial class CustomFormatEditorForm : Form
     {

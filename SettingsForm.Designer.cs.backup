@@ -1,4 +1,4 @@
-namespace BLLMT
+namespace Wraith
 {
     partial class SettingsForm
     {
@@ -130,7 +130,7 @@ namespace BLLMT
             this.MinimumSize = new Size(800, 600);
             this.MaximizeBox = false;
             this.StartPosition = FormStartPosition.CenterScreen;
-            this.Text = "BLLMT Settings";
+            this.Text = "Wraith Settings";
             this.Font = new Font("Segoe UI", 9F);
 
             // TabControl

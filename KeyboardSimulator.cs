@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices;
 
-namespace BLLMT
+namespace Wraith
 {
     public class KeyboardSimulator
     {

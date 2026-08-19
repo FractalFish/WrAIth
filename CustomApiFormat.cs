@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace BLLMT
+namespace Wraith
 {
     /// <summary>
     /// Defines a custom API request format for providers not using OpenAI or Anthropic formats
