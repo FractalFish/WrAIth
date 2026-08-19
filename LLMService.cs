@@ -225,6 +225,100 @@ namespace Wraith
             throw new Exception("Invalid response format from API");
         }
 
+        /// <summary>
+        /// Fetch the list of model IDs available to this API key, straight from the
+        /// provider's own /models endpoint. Throws with a readable message on failure;
+        /// callers should show that to the user rather than swallow it.
+        /// </summary>
+        public async Task<List<string>> FetchAvailableModelsAsync(string provider, string apiKey)
+        {
+            if (string.IsNullOrWhiteSpace(apiKey))
+            {
+                throw new InvalidOperationException("Enter an API key first.");
+            }
+
+            if (provider.Equals(ProviderTypes.OpenAI, StringComparison.OrdinalIgnoreCase))
+            {
+                return await FetchOpenAICompatibleModelsAsync(DefaultEndpoints.OpenAIModelsList, apiKey, ExcludeNonChatOpenAIModels);
+            }
+            else if (provider.Equals(ProviderTypes.Groq, StringComparison.OrdinalIgnoreCase))
+            {
+                return await FetchOpenAICompatibleModelsAsync(DefaultEndpoints.GroqModelsList, apiKey, null);
+            }
+            else if (provider.Equals(ProviderTypes.Anthropic, StringComparison.OrdinalIgnoreCase))
+            {
+                return await FetchAnthropicModelsAsync(apiKey);
+            }
+
+            throw new InvalidOperationException($"Model listing isn't supported for provider '{provider}'.");
+        }
+
+        private static bool ExcludeNonChatOpenAIModels(string id)
+        {
+            string[] nonChat = { "embedding", "whisper", "tts", "dall-e", "moderation", "davinci-002", "babbage-002" };
+            return !nonChat.Any(n => id.Contains(n, StringComparison.OrdinalIgnoreCase));
+        }
+
+        private async Task<List<string>> FetchOpenAICompatibleModelsAsync(string endpoint, string apiKey, Func<string, bool>? filter)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get, endpoint);
+            request.Headers.Add("Authorization", $"Bearer {apiKey}");
+
+            var response = await _httpClient.SendAsync(request);
+            var responseContent = await response.Content.ReadAsStringAsync();
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new HttpRequestException($"Failed to fetch models: {response.StatusCode} - {responseContent}");
+            }
+
+            var jsonResponse = JsonNode.Parse(responseContent);
+            var data = jsonResponse?["data"]?.AsArray();
+            if (data == null)
+            {
+                throw new Exception("Unexpected response format from models endpoint.");
+            }
+
+            var ids = data
+                .Select(item => item?["id"]?.ToString())
+                .Where(id => !string.IsNullOrEmpty(id))
+                .Select(id => id!)
+                .Where(id => filter == null || filter(id))
+                .OrderBy(id => id, StringComparer.OrdinalIgnoreCase)
+                .ToList();
+
+            return ids;
+        }
+
+        private async Task<List<string>> FetchAnthropicModelsAsync(string apiKey)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get, DefaultEndpoints.AnthropicModelsList);
+            request.Headers.Add("x-api-key", apiKey);
+            request.Headers.Add("anthropic-version", "2023-06-01");
+
+            var response = await _httpClient.SendAsync(request);
+            var responseContent = await response.Content.ReadAsStringAsync();
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new HttpRequestException($"Failed to fetch models: {response.StatusCode} - {responseContent}");
+            }
+
+            var jsonResponse = JsonNode.Parse(responseContent);
+            var data = jsonResponse?["data"]?.AsArray();
+            if (data == null)
+            {
+                throw new Exception("Unexpected response format from models endpoint.");
+            }
+
+            return data
+                .Select(item => item?["id"]?.ToString())
+                .Where(id => !string.IsNullOrEmpty(id))
+                .Select(id => id!)
+                .OrderBy(id => id, StringComparer.OrdinalIgnoreCase)
+                .ToList();
+        }
+
         private void Log(string message)
         {
             string timestamp = DateTime.Now.ToString("HH:mm:ss.fff");

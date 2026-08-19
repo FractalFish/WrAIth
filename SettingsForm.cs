@@ -292,7 +292,10 @@ namespace Wraith
             
             // Show/hide Edit Format button
             btnEditCustomFormat.Visible = (provider == ProviderTypes.Custom);
-            
+
+            // Custom endpoints have no standard list-models API to call
+            btnFetchModels.Enabled = (provider != ProviderTypes.Custom);
+
             if (provider == ProviderTypes.OpenAI)
             {
                 txtEndpoint.Text = DefaultEndpoints.OpenAI;
@@ -323,6 +326,52 @@ namespace Wraith
                 _selectedModel.CustomApiFormat = editor.Format;
                 lblStatus.ForeColor = Color.Green;
                 lblStatus.Text = UIStrings.CustomFormatSaved;
+            }
+        }
+
+        private async void BtnFetchModels_Click(object? sender, EventArgs e)
+        {
+            string provider = cmbProvider.Text;
+
+            // Resolve the real API key even if the box currently shows the masked value.
+            string apiKey = txtApiKey.Text;
+            if (_selectedModel != null && apiKey.Contains("*") && _originalApiKeys.ContainsKey(_selectedModel.Id))
+            {
+                apiKey = _originalApiKeys[_selectedModel.Id];
+            }
+
+            if (string.IsNullOrWhiteSpace(apiKey))
+            {
+                lblStatus.ForeColor = Color.Red;
+                lblStatus.Text = "Enter an API key first.";
+                return;
+            }
+
+            lblStatus.ForeColor = Color.Blue;
+            lblStatus.Text = $"Fetching available {provider} models...";
+            btnFetchModels.Enabled = false;
+
+            try
+            {
+                var llmService = new LLMService(_settings);
+                var models = await llmService.FetchAvailableModelsAsync(provider, apiKey);
+
+                string currentText = txtModel.Text;
+                txtModel.Items.Clear();
+                txtModel.Items.AddRange(models.ToArray());
+                txtModel.Text = currentText; // keep whatever was already entered/selected
+
+                lblStatus.ForeColor = Color.Green;
+                lblStatus.Text = $"Found {models.Count} models. Pick one from the dropdown.";
+            }
+            catch (Exception ex)
+            {
+                lblStatus.ForeColor = Color.Red;
+                lblStatus.Text = $"Couldn't fetch models: {ex.Message}";
+            }
+            finally
+            {
+                btnFetchModels.Enabled = true;
             }
         }
 

@@ -18,7 +18,8 @@ namespace Wraith
         private System.Windows.Forms.ComboBox cmbProvider;
         private System.Windows.Forms.TextBox txtApiKey;
         private System.Windows.Forms.Button btnEditCustomFormat;
-        private System.Windows.Forms.TextBox txtModel;
+        private System.Windows.Forms.ComboBox txtModel;
+        private System.Windows.Forms.Button btnFetchModels;
         private System.Windows.Forms.TextBox txtEndpoint;
         private System.Windows.Forms.CheckBox chkIsEnabled;
         private System.Windows.Forms.Button btnTestModel;
@@ -82,7 +83,8 @@ namespace Wraith
             this.cmbProvider = new System.Windows.Forms.ComboBox();
             this.txtApiKey = new System.Windows.Forms.TextBox();
             this.btnEditCustomFormat = new System.Windows.Forms.Button();
-            this.txtModel = new System.Windows.Forms.TextBox();
+            this.txtModel = new System.Windows.Forms.ComboBox();
+            this.btnFetchModels = new System.Windows.Forms.Button();
             this.txtEndpoint = new System.Windows.Forms.TextBox();
             this.chkIsEnabled = new System.Windows.Forms.CheckBox();
             this.btnTestModel = new System.Windows.Forms.Button();
@@ -223,8 +225,15 @@ namespace Wraith
             
             AddLabel(this.pnlModelDetails, "Model:", 10, yPos);
             this.txtModel.Location = new Point(120, yPos);
-            this.txtModel.Size = new Size(370, 23);
+            this.txtModel.Size = new Size(280, 23);
+            this.txtModel.DropDownStyle = ComboBoxStyle.DropDown; // editable: pick from the list or type your own
             this.pnlModelDetails.Controls.Add(this.txtModel);
+
+            this.btnFetchModels.Location = new Point(405, yPos);
+            this.btnFetchModels.Size = new Size(85, 23);
+            this.btnFetchModels.Text = "Fetch List";
+            this.btnFetchModels.Click += BtnFetchModels_Click;
+            this.pnlModelDetails.Controls.Add(this.btnFetchModels);
             yPos += 35;
             
             AddLabel(this.pnlModelDetails, "Endpoint:", 10, yPos);
