@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Wraith.Constants;
+using Wraith.Services;
 
 namespace Wraith
 {
@@ -58,8 +59,21 @@ namespace Wraith
                     
                     return settings;
                 }
-                catch
+                catch (Exception ex)
                 {
+                    // Don't silently discard settings we failed to parse - preserve the
+                    // file for recovery and log why, instead of quietly resetting to
+                    // defaults (which previously made API keys vanish with no warning).
+                    try
+                    {
+                        string backupPath = filePath + $".corrupted-{DateTime.Now:yyyyMMdd-HHmmss}";
+                        File.Copy(filePath, backupPath, overwrite: true);
+                        Logger.LogError($"Failed to load settings from {filePath}; backed up to {backupPath}", ex);
+                    }
+                    catch (Exception backupEx)
+                    {
+                        Logger.LogError($"Failed to load settings from {filePath}, and failed to back up the corrupted file", backupEx);
+                    }
                     return new AppSettings();
                 }
             }
@@ -288,7 +302,20 @@ namespace Wraith
             string filePath = GetSettingsPath();
             var options = new JsonSerializerOptions { WriteIndented = true };
             string json = JsonSerializer.Serialize(this, options);
-            File.WriteAllText(filePath, json);
+
+            // Write to a temp file and swap it in, so a crash or kill mid-write
+            // can't leave settings.json truncated/corrupted.
+            string tempPath = filePath + ".tmp";
+            File.WriteAllText(tempPath, json);
+
+            if (File.Exists(filePath))
+            {
+                File.Replace(tempPath, filePath, null);
+            }
+            else
+            {
+                File.Move(tempPath, filePath);
+            }
         }
 
         private static string GetSettingsPath()

@@ -17,6 +17,22 @@ namespace Wraith
             _settings = settings;
             InitializeComponent();
             LoadSettings();
+            this.FormClosing += SettingsForm_FormClosing;
+        }
+
+        private void SettingsForm_FormClosing(object? sender, FormClosingEventArgs e)
+        {
+            // Persist whatever is currently in the form, regardless of how the
+            // dialog is being closed (Save button, X button, Alt+F4, etc.) - a
+            // typed API key should never be silently discarded.
+            try
+            {
+                PersistSettings();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[SettingsForm] Error saving on close: {ex}");
+            }
         }
 
         private void LoadSettings()
@@ -347,33 +363,38 @@ namespace Wraith
             }
         }
 
+        private void PersistSettings()
+        {
+            // Save current model if editing
+            if (_selectedModel != null)
+            {
+                SaveCurrentModelWithoutRefresh();
+            }
+
+            // Save global options only (no system prompt)
+            _settings.TypingDelayMs = (int)nudTypingDelay.Value;
+            _settings.TypingVariationMs = (int)nudTypingVariation.Value;
+
+            // Ensure at least one default model
+            if (!_settings.Models.Any(m => m.IsDefault))
+            {
+                if (_settings.Models.Count > 0)
+                    _settings.Models[0].IsDefault = true;
+            }
+
+            _settings.Save();
+        }
+
         private void BtnSave_Click(object? sender, EventArgs e)
         {
             try
             {
-                // Save current model if editing
-                if (_selectedModel != null)
-                {
-                    SaveCurrentModelWithoutRefresh();
-                }
-                
-                // Save global options only (no system prompt)
-                _settings.TypingDelayMs = (int)nudTypingDelay.Value;
-                _settings.TypingVariationMs = (int)nudTypingVariation.Value;
-
-                // Ensure at least one default model
-                if (!_settings.Models.Any(m => m.IsDefault))
-                {
-                    if (_settings.Models.Count > 0)
-                        _settings.Models[0].IsDefault = true;
-                }
-
-                _settings.Save();
+                PersistSettings();
 
                 lblStatus.ForeColor = Color.Green;
                 lblStatus.Text = UIStrings.SettingsSaved;
 
-                Task.Delay(DefaultTimings.SettingsAutoCloseDelayMs).ContinueWith(_ => 
+                Task.Delay(DefaultTimings.SettingsAutoCloseDelayMs).ContinueWith(_ =>
                 {
                     if (!IsDisposed)
                     {
