@@ -1,6 +1,6 @@
-using BLLMT.Interfaces;
+using Wraith.Interfaces;
 
-namespace BLLMT.Platforms.Windows
+namespace Wraith.Platforms.Windows
 {
     /// <summary>
     /// Windows implementation wrapper for existing KeyboardSimulator

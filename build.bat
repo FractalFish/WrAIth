@@ -1,6 +1,6 @@
 @echo off
 echo ========================================
-echo BLLMT Build Script
+echo Wraith Build Script
 echo ========================================
 echo.
 

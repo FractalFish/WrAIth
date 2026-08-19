@@ -1,7 +1,7 @@
 using System.Windows.Forms;
-using BLLMT.Constants;
+using Wraith.Constants;
 
-namespace BLLMT
+namespace Wraith
 {
     public partial class SettingsForm : Form
     {
@@ -17,6 +17,22 @@ namespace BLLMT
             _settings = settings;
             InitializeComponent();
             LoadSettings();
+            this.FormClosing += SettingsForm_FormClosing;
+        }
+
+        private void SettingsForm_FormClosing(object? sender, FormClosingEventArgs e)
+        {
+            // Persist whatever is currently in the form, regardless of how the
+            // dialog is being closed (Save button, X button, Alt+F4, etc.) - a
+            // typed API key should never be silently discarded.
+            try
+            {
+                PersistSettings();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[SettingsForm] Error saving on close: {ex}");
+            }
         }
 
         private void LoadSettings()
@@ -276,7 +292,10 @@ namespace BLLMT
             
             // Show/hide Edit Format button
             btnEditCustomFormat.Visible = (provider == ProviderTypes.Custom);
-            
+
+            // Custom endpoints have no standard list-models API to call
+            btnFetchModels.Enabled = (provider != ProviderTypes.Custom);
+
             if (provider == ProviderTypes.OpenAI)
             {
                 txtEndpoint.Text = DefaultEndpoints.OpenAI;
@@ -307,6 +326,52 @@ namespace BLLMT
                 _selectedModel.CustomApiFormat = editor.Format;
                 lblStatus.ForeColor = Color.Green;
                 lblStatus.Text = UIStrings.CustomFormatSaved;
+            }
+        }
+
+        private async void BtnFetchModels_Click(object? sender, EventArgs e)
+        {
+            string provider = cmbProvider.Text;
+
+            // Resolve the real API key even if the box currently shows the masked value.
+            string apiKey = txtApiKey.Text;
+            if (_selectedModel != null && apiKey.Contains("*") && _originalApiKeys.ContainsKey(_selectedModel.Id))
+            {
+                apiKey = _originalApiKeys[_selectedModel.Id];
+            }
+
+            if (string.IsNullOrWhiteSpace(apiKey))
+            {
+                lblStatus.ForeColor = Color.Red;
+                lblStatus.Text = "Enter an API key first.";
+                return;
+            }
+
+            lblStatus.ForeColor = Color.Blue;
+            lblStatus.Text = $"Fetching available {provider} models...";
+            btnFetchModels.Enabled = false;
+
+            try
+            {
+                var llmService = new LLMService(_settings);
+                var models = await llmService.FetchAvailableModelsAsync(provider, apiKey);
+
+                string currentText = txtModel.Text;
+                txtModel.Items.Clear();
+                txtModel.Items.AddRange(models.ToArray());
+                txtModel.Text = currentText; // keep whatever was already entered/selected
+
+                lblStatus.ForeColor = Color.Green;
+                lblStatus.Text = $"Found {models.Count} models. Pick one from the dropdown.";
+            }
+            catch (Exception ex)
+            {
+                lblStatus.ForeColor = Color.Red;
+                lblStatus.Text = $"Couldn't fetch models: {ex.Message}";
+            }
+            finally
+            {
+                btnFetchModels.Enabled = true;
             }
         }
 
@@ -347,33 +412,38 @@ namespace BLLMT
             }
         }
 
+        private void PersistSettings()
+        {
+            // Save current model if editing
+            if (_selectedModel != null)
+            {
+                SaveCurrentModelWithoutRefresh();
+            }
+
+            // Save global options only (no system prompt)
+            _settings.TypingDelayMs = (int)nudTypingDelay.Value;
+            _settings.TypingVariationMs = (int)nudTypingVariation.Value;
+
+            // Ensure at least one default model
+            if (!_settings.Models.Any(m => m.IsDefault))
+            {
+                if (_settings.Models.Count > 0)
+                    _settings.Models[0].IsDefault = true;
+            }
+
+            _settings.Save();
+        }
+
         private void BtnSave_Click(object? sender, EventArgs e)
         {
             try
             {
-                // Save current model if editing
-                if (_selectedModel != null)
-                {
-                    SaveCurrentModelWithoutRefresh();
-                }
-                
-                // Save global options only (no system prompt)
-                _settings.TypingDelayMs = (int)nudTypingDelay.Value;
-                _settings.TypingVariationMs = (int)nudTypingVariation.Value;
-
-                // Ensure at least one default model
-                if (!_settings.Models.Any(m => m.IsDefault))
-                {
-                    if (_settings.Models.Count > 0)
-                        _settings.Models[0].IsDefault = true;
-                }
-
-                _settings.Save();
+                PersistSettings();
 
                 lblStatus.ForeColor = Color.Green;
                 lblStatus.Text = UIStrings.SettingsSaved;
 
-                Task.Delay(DefaultTimings.SettingsAutoCloseDelayMs).ContinueWith(_ => 
+                Task.Delay(DefaultTimings.SettingsAutoCloseDelayMs).ContinueWith(_ =>
                 {
                     if (!IsDisposed)
                     {

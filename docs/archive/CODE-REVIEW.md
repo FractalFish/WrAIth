@@ -182,7 +182,7 @@ public static class UIStrings
 
 **Problem**: String literals, prone to typos
 
-**Solution**: These are fine - JSON serialization needs literal strings. 
+**Solution**: These are fine - JSON serialization needs literal strings.
 **No change needed** - attribute approach is correct.
 
 ---
@@ -450,10 +450,10 @@ public class LLMServiceTests
 ## Priority Order
 
 ### Immediate (Before v1.0):
-1. ? Create Constants classes
-2. ? Replace magic strings
-3. ? Extract HotkeyParser utility
-4. ? Extract ModelValidator
+1. -> Create Constants classes
+2. -> Replace magic strings
+3. -> Extract HotkeyParser utility
+4. -> Extract ModelValidator
 
 ### Short Term:
 5. Refactor LLMService request building

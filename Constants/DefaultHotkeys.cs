@@ -1,4 +1,4 @@
-namespace BLLMT.Constants
+namespace Wraith.Constants
 {
     /// <summary>
     /// Default hotkey combinations for application actions

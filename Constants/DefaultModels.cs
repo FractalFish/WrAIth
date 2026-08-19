@@ -1,4 +1,4 @@
-namespace BLLMT.Constants
+namespace Wraith.Constants
 {
     /// <summary>
     /// Default model IDs for supported providers

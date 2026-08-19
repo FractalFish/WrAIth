@@ -1,18 +1,18 @@
 # Complete Fix - Manual Application Required
 
-## ?? Files Still Locked
+## Files Still Locked
 
 Visual Studio still has the files locked. Here's what to do:
 
 ---
 
-## ?? Quick Fix Steps
+## Quick Fix Steps
 
 ### Step 1: Close SettingsForm.Designer.cs and SettingsForm.cs in VS
 
 1. In Visual Studio, **close these tabs**:
-   - SettingsForm.Designer.cs
-   - SettingsForm.cs
+ - SettingsForm.Designer.cs
+ - SettingsForm.cs
 
 2. **Save all** (Ctrl+Shift+S)
 
@@ -46,7 +46,7 @@ _selectedModel.OutputHotkey = txtOutputHotkey.GetHotkeyString();
 _selectedModel.AbortHotkey = txtAbortHotkey.GetHotkeyString();
 ```
 
-**Save the file** ?
+**Save the file**
 
 ---
 
@@ -79,7 +79,7 @@ private System.Windows.Forms.Button btnClearScreenshotEnd;
 private System.Windows.Forms.Button btnClearAppendVision;
 ```
 
-**DELETE IT** ?
+**DELETE IT**
 
 3. **Delete hotkey initialization in InitializeComponent** (around lines 115-135):
 
@@ -265,7 +265,7 @@ this.btnCancelHotkey.Click += BtnCancelHotkey_Click;
 this.pnlHotkeyEdit.Controls.Add(this.btnCancelHotkey);
 ```
 
-**Save the file** ?
+**Save the file**
 
 ---
 
@@ -273,19 +273,19 @@ this.pnlHotkeyEdit.Controls.Add(this.btnCancelHotkey);
 
 1. **Build** the solution (Ctrl+Shift+B)
 2. **Run** the application (F5)
-3. **Open Settings** ? **Hotkeys tab**
+3. **Open Settings** -> **Hotkeys tab**
 4. **Verify**:
-   - Models tab has NO hotkey fields
-   - Hotkeys tab shows global list
-   - Add/Edit buttons work
+ - Models tab has NO hotkey fields
+ - Hotkeys tab shows global list
+ - Add/Edit buttons work
 
 ---
 
-## ? Expected Result
+## Expected Result
 
 **Models Tab:** Only shows model configuration (no hotkeys)
 **Hotkeys Tab:** Shows global list of ALL hotkeys with intuitive Add/Edit/Remove interface
 
 ---
 
-**Let me know if you need help with any step!** ??
+**Let me know if you need help with any step!**

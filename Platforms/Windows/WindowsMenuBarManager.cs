@@ -1,7 +1,7 @@
-using BLLMT.Interfaces;
+using Wraith.Interfaces;
 using System.Windows.Forms;
 
-namespace BLLMT.Platforms.Windows
+namespace Wraith.Platforms.Windows
 {
     /// <summary>
     /// Windows implementation wrapper for NotifyIcon (system tray)

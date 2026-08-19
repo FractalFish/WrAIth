@@ -1,80 +1,80 @@
-# BLLMT Roadmap
+# Wraith Roadmap
 
 ## Current Status: v0.9-alpha
 
-### ? Completed Features
+### Completed Features
 
 #### Core Functionality
-- ? Background service with system tray icon
-- ? Global hotkey registration
-- ? Low-level keyboard interception
-- ? Keystroke-by-keystroke emulation with realistic timing
-- ? Clipboard integration
-- ? Multi-model support
-- ? Per-model configuration
-- ? Per-model hotkeys
-- ? Per-model system prompts
+- Background service with system tray icon
+- Global hotkey registration
+- Low-level keyboard interception
+- Keystroke-by-keystroke emulation with realistic timing
+- Clipboard integration
+- Multi-model support
+- Per-model configuration
+- Per-model hotkeys
+- Per-model system prompts
 
 #### AI Integration
-- ? OpenAI API support
-- ? Anthropic (Claude) API support
-- ? Groq API support
-- ? Custom API format (user-defined JSON templates)
-- ? Text and vision model support
-- ? Two-stage vision + reasoning workflow
+- OpenAI API support
+- Anthropic (Claude) API support
+- Groq API support
+- Custom API format (user-defined JSON templates)
+- Text and vision model support
+- Two-stage vision + reasoning workflow
 
 #### Screenshot & Vision
-- ? Interactive screenshot selection
-- ? Region capture with overlay
-- ? Base64 encoding for vision APIs
-- ? Screenshot hotkeys (Start/End)
-- ? Auto-detect clipboard images
-- ? Vision + reasoning combination
+- Interactive screenshot selection
+- Region capture with overlay
+- Base64 encoding for vision APIs
+- Screenshot hotkeys (Start/End)
+- Auto-detect clipboard images
+- Vision + reasoning combination
 
 #### Settings & Configuration
-- ? Settings form with tabs (Models, Global Settings)
-- ? Per-model configuration
-- ? Custom API format editor
-- ? Typing speed configuration
-- ? API key masking in UI
-- ? Model enable/disable toggle
-- ? Test model connection button
-- ? Automatic vision capability detection
+- Settings form with tabs (Models, Global Settings)
+- Per-model configuration
+- Custom API format editor
+- Typing speed configuration
+- API key masking in UI
+- Model enable/disable toggle
+- Test model connection button
+- Automatic vision capability detection
 
 #### Recent Improvements
-- ? Removed redundant "Supports Vision" checkbox
-- ? Wired up Custom API Format editor
-- ? Fixed label overlap issues
-- ? Simplified model testing
-- ? Renamed "Trigger" ? "Send Query"
-- ? Renamed "Append Vision" ? "Vision + Reasoning"
-- ? Removed dead "Analyze Screenshot" code
-- ? Removed duplicate "Shutdown" button
+- Removed redundant "Supports Vision" checkbox
+- Wired up Custom API Format editor
+- Fixed label overlap issues
+- Simplified model testing
+- Renamed "Trigger" -> "Send Query"
+- Renamed "Append Vision" -> "Vision + Reasoning"
+- Removed dead "Analyze Screenshot" code
+- Removed duplicate "Shutdown" button
 
 ---
 
-## ?? In Progress
+## In Progress
 
-### Phase 1: Documentation Cleanup ?
+### Phase 1: Documentation Cleanup
 **Status**: In progress
-**Goal**: Reduce 31 markdown files ? 10 organized files
+**Goal**: Reduce 31 markdown files -> 10 organized files
 
 **Tasks**:
-- ? Create consolidation plan
-- ? Create DEVELOPMENT.md (this file)
-- ? Create ROADMAP.md (this file)
-- ? Create CODE-REVIEW.md
-- ? Delete 18 obsolete instruction files
-- ? Update README.md
+- Create consolidation plan
+- Create DEVELOPMENT.md (this file)
+- Create ROADMAP.md (this file)
+- Create CODE-REVIEW.md
+- Delete 18 obsolete instruction files
+- Update README.md
 
 ---
 
-## ?? Planned Features
+## Planned Features
 
-### Phase 2: Global Hotkeys System ?? **HIGH PRIORITY**
+### Phase 2: Global Hotkeys System -> **HIGH PRIORITY**
 **Problem**: Current per-model hotkeys can conflict
 
-**Solution**: Invert relationship - Hotkey ? Model + Action
+**Solution**: Invert relationship - Hotkey -> Model + Action
 
 **New Data Model**:
 ```csharp
@@ -88,10 +88,10 @@ public class HotkeyMapping
 ```
 
 **Benefits**:
-- ? No conflicts possible (one hotkey = one action)
-- ? See all mappings at a glance
-- ? Flexible (multiple hotkeys ? same model)
-- ? Intuitive workflow
+- No conflicts possible (one hotkey = one action)
+- See all mappings at a glance
+- Flexible (multiple hotkeys -> same model)
+- Intuitive workflow
 
 **Implementation**:
 1. Create HotkeyMapping class
@@ -112,7 +112,7 @@ public class HotkeyMapping
 
 ---
 
-### Phase 3: Model Presets System ?? **HIGH PRIORITY**
+### Phase 3: Model Presets System -> **HIGH PRIORITY**
 **Problem**: Users must manually configure each model
 
 **Solution**: Pre-defined and user-defined model templates
@@ -148,33 +148,33 @@ public class ModelPreset
 - Community preset sharing (future)
 
 **Benefits**:
-- ? One-click model addition
-- ? Users can save their configurations
-- ? Share configurations between installations
-- ? Reduce setup friction
+- One-click model addition
+- Users can save their configurations
+- Share configurations between installations
+- Reduce setup friction
 
 **Estimated Effort**: 8-10 hours
 
 ---
 
-### Phase 4: Code Cleanup & Refactoring ?? **HIGH PRIORITY**
+### Phase 4: Code Cleanup & Refactoring -> **HIGH PRIORITY**
 **Problem**: Hardcoded values, some code duplication
 
 **Goals**:
 1. **Remove Hardcoding**:
-   - Move magic strings to constants
-   - Externalize configuration
-   - Make everything user-configurable
+ - Move magic strings to constants
+ - Externalize configuration
+ - Make everything user-configurable
 
 2. **Improve Reusability**:
-   - Extract common patterns
-   - Create utility methods
-   - Reduce code duplication
+ - Extract common patterns
+ - Create utility methods
+ - Reduce code duplication
 
 3. **Better Separation of Concerns**:
-   - Service layer for business logic
-   - UI layer for presentation
-   - Clear interfaces between components
+ - Service layer for business logic
+ - UI layer for presentation
+ - Clear interfaces between components
 
 **See**: CODE-REVIEW.md for detailed audit
 
@@ -182,7 +182,7 @@ public class ModelPreset
 
 ---
 
-### Phase 5: Enhanced Features ??
+### Phase 5: Enhanced Features
 **Priority**: Medium-Low
 
 #### 5.1 Conversation History
@@ -218,19 +218,18 @@ public class ModelPreset
 
 ---
 
-## ?? Known Issues
+## Known Issues
 
 ### Critical
 - None currently
 
 ### High Priority
-- **Hotkey Conflicts**: Per-model hotkeys can conflict ? **Fixed in Phase 2**
-- **Hardcoded Values**: Magic strings throughout code ? **Fixed in Phase 4**
+- **Hotkey Conflicts**: Per-model hotkeys can conflict -> **Fixed in Phase 2**
+- **Hardcoded Values**: Magic strings throughout code -> **Fixed in Phase 4**
 
 ### Medium Priority
 - **No Undo**: Can't easily undo AI response output
 - **No Response Preview**: Can't review before output
-- **macOS Support Incomplete**: Keyboard emulation needs work
 
 ### Low Priority
 - **API Key Storage**: Plaintext (consider encryption)
@@ -239,18 +238,18 @@ public class ModelPreset
 
 ---
 
-## ?? Release Plan
+## Release Plan
 
 ### v1.0 (Stable Release)
 **Target**: After Phase 2, 3, and 4 complete
 **Requirements**:
-- ? Core functionality stable
-- ? Global hotkeys system
-- ? Model presets
-- ? Code cleanup complete
-- ? Documentation complete
-- ? Build instructions for Windows & macOS
-- ? User guide complete
+- Core functionality stable
+- Global hotkeys system
+- Model presets
+- Code cleanup complete
+- Documentation complete
+- Build instructions for Windows
+- User guide complete
 
 ### v1.1 (Feature Release)
 **Target**: After v1.0 + Phase 5.1-5.3
@@ -272,12 +271,12 @@ public class ModelPreset
 
 ---
 
-## ?? Development Priorities
+## Development Priorities
 
 ### Immediate (Next Session):
-1. ? Documentation cleanup (this file!)
-2. ? Code review & hardcoding audit
-3. ? Global hotkeys system (Phase 2)
+1. -> Documentation cleanup (this file!)
+2. -> Code review & hardcoding audit
+3. -> Global hotkeys system (Phase 2)
 
 ### Short Term (Next 2-3 Sessions):
 4. Model presets system (Phase 3)
@@ -286,8 +285,7 @@ public class ModelPreset
 
 ### Medium Term:
 7. Enhanced features (Phase 5.1-5.3)
-8. macOS support improvements
-9. Error handling & recovery
+8. Error handling & recovery
 
 ### Long Term:
 10. Advanced features (Phase 5.4-5.6)
@@ -296,14 +294,14 @@ public class ModelPreset
 
 ---
 
-## ?? Feature Requests
+## Feature Requests
 
 ### From User Feedback:
-- ? Custom API format support
-- ? Per-model system prompts
-- ? Vision + reasoning workflow
-- ? Global hotkeys (in progress)
-- ? Model presets (planned)
+- Custom API format support
+- Per-model system prompts
+- Vision + reasoning workflow
+- Global hotkeys (in progress)
+- Model presets (planned)
 
 ### Ideas for Future:
 - Voice input integration
@@ -315,7 +313,7 @@ public class ModelPreset
 
 ---
 
-## ?? How to Contribute
+## How to Contribute
 
 See **CONTRIBUTING.md** for:
 - Feature request process
@@ -325,13 +323,13 @@ See **CONTRIBUTING.md** for:
 
 ---
 
-## ?? Version History
+## Version History
 
 See **CHANGELOG.md** for detailed version history.
 
 ### Recent Changes:
 - **2024-01**: v0.9-alpha
-  - Multi-model support
-  - Custom API format
-  - Vision + reasoning workflow
-  - Quick fixes and improvements
+ - Multi-model support
+ - Custom API format
+ - Vision + reasoning workflow
+ - Quick fixes and improvements

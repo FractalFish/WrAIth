@@ -1,4 +1,4 @@
-namespace BLLMT.Interfaces
+namespace Wraith.Interfaces
 {
     /// <summary>
     /// Platform-specific screenshot service interface

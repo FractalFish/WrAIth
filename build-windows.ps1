@@ -1,8 +1,8 @@
-# Build standalone Windows version of BLLMT
+# Build standalone Windows version of Wraith
 # This creates a self-contained executable that includes .NET runtime
 
 Write-Host "=====================================" -ForegroundColor Cyan
-Write-Host "Building BLLMT for Windows (Standalone)" -ForegroundColor Cyan
+Write-Host "Building Wraith for Windows (Standalone)" -ForegroundColor Cyan
 Write-Host "=====================================" -ForegroundColor Cyan
 Write-Host ""
 
@@ -35,11 +35,11 @@ Write-Host "Build Successful!" -ForegroundColor Green
 Write-Host "=====================================" -ForegroundColor Green
 Write-Host ""
 Write-Host "Output location: .\publish\windows\" -ForegroundColor Cyan
-Write-Host "Executable: BLLMT.exe" -ForegroundColor Cyan
+Write-Host "Executable: Wraith.exe" -ForegroundColor Cyan
 Write-Host ""
 
 # Get file size
-$exePath = ".\publish\windows\BLLMT.exe"
+$exePath = ".\publish\windows\Wraith.exe"
 if (Test-Path $exePath) {
     $fileSize = (Get-Item $exePath).Length / 1MB
     Write-Host "File size: $($fileSize.ToString('N2')) MB" -ForegroundColor Cyan
@@ -48,17 +48,17 @@ if (Test-Path $exePath) {
 
 # Create a README in the publish folder
 $readmeContent = @"
-# BLLMT - Windows Standalone
+# Wraith - Windows Standalone
 
-This is a self-contained build of BLLMT for Windows.
+This is a self-contained build of Wraith for Windows.
 
 ## What's Included
-- BLLMT.exe (includes .NET 10 runtime)
+- Wraith.exe (includes .NET 10 runtime)
 - No additional dependencies needed!
 
 ## Installation
-1. Copy BLLMT.exe to any folder on your computer
-2. Run BLLMT.exe
+1. Copy Wraith.exe to any folder on your computer
+2. Run Wraith.exe
 3. The app will start in the system tray
 
 ## First Run
@@ -72,7 +72,7 @@ This is a self-contained build of BLLMT for Windows.
 - Windows 11 (any version)
 
 ## Notes
-- Settings are stored in: %APPDATA%\BLLMT\settings.json
+- Settings are stored in: %APPDATA%\Wraith\settings.json
 - No installation required - just run the .exe
 - You can move the .exe file anywhere
 
@@ -83,7 +83,7 @@ If Windows Defender SmartScreen blocks the app:
 
 This is normal for unsigned applications.
 
-For more information, visit: https://github.com/yourusername/bllmt
+For more information, visit: https://github.com/FractalFish/WrAIth
 "@
 
 Set-Content -Path ".\publish\windows\README.txt" -Value $readmeContent
@@ -91,7 +91,7 @@ Set-Content -Path ".\publish\windows\README.txt" -Value $readmeContent
 Write-Host "README.txt created in output folder" -ForegroundColor Green
 Write-Host ""
 Write-Host "Next steps:" -ForegroundColor Yellow
-Write-Host "1. Test the executable: .\publish\windows\BLLMT.exe" -ForegroundColor White
+Write-Host "1. Test the executable: .\publish\windows\Wraith.exe" -ForegroundColor White
 Write-Host "2. Create a ZIP file for distribution" -ForegroundColor White
 Write-Host "3. Upload to GitHub Releases" -ForegroundColor White
 Write-Host ""
@@ -103,7 +103,7 @@ if ($createZip -eq "Y" -or $createZip -eq "y") {
     Write-Host "Creating ZIP file..." -ForegroundColor Yellow
     
     $version = "1.0.0" # You can change this
-    $zipPath = ".\publish\BLLMT-Windows-v$version.zip"
+    $zipPath = ".\publish\Wraith-Windows-v$version.zip"
     
     # Remove old ZIP if exists
     Remove-Item -Path $zipPath -Force -ErrorAction SilentlyContinue
@@ -123,4 +123,4 @@ if ($createZip -eq "Y" -or $createZip -eq "y") {
 }
 
 Write-Host ""
-Write-Host "Done! ??" -ForegroundColor Green
+Write-Host "Done!" -ForegroundColor Green

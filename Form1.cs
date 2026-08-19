@@ -1,6 +1,6 @@
-using BLLMT.Constants;
+using Wraith.Constants;
 
-namespace BLLMT
+namespace Wraith
 {
     public partial class Form1 : Form
     {
@@ -27,7 +27,7 @@ namespace BLLMT
             InitializeComponent();
             Log("Application starting...");
             _settings = AppSettings.Load();
-            Log($"Settings loaded from: {Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "BLLMT", "settings.json")}");
+            Log($"Settings loaded from: {Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Wraith", "settings.json")}");
             InitializeServices();
             RegisterHotkeys();
             ParseAbortHotkey();
@@ -329,7 +329,7 @@ namespace BLLMT
             {
                 Log($"ERROR: {ex.Message}");
                 UpdateStatus($"Error: {ex.Message}");
-                notifyIcon.ShowBalloonTip(DefaultTimings.BalloonTipDurationLong, "BLLMT Error", ex.Message, ToolTipIcon.Error);
+                notifyIcon.ShowBalloonTip(DefaultTimings.BalloonTipDurationLong, "Wraith Error", ex.Message, ToolTipIcon.Error);
             }
             finally
             {
@@ -378,7 +378,7 @@ namespace BLLMT
             {
                 Log($"ERROR processing vision: {ex.Message}");
                 UpdateStatus($"Error: {ex.Message}");
-                notifyIcon.ShowBalloonTip(DefaultTimings.BalloonTipDurationLong, "BLLMT Error", ex.Message, ToolTipIcon.Error);
+                notifyIcon.ShowBalloonTip(DefaultTimings.BalloonTipDurationLong, "Wraith Error", ex.Message, ToolTipIcon.Error);
             }
             finally
             {
@@ -461,7 +461,7 @@ namespace BLLMT
             {
                 Log($"ERROR: {ex.Message}");
                 UpdateStatus($"Error: {ex.Message}");
-                notifyIcon.ShowBalloonTip(DefaultTimings.BalloonTipDurationLong, "BLLMT Error", ex.Message, ToolTipIcon.Error);
+                notifyIcon.ShowBalloonTip(DefaultTimings.BalloonTipDurationLong, "Wraith Error", ex.Message, ToolTipIcon.Error);
             }
             finally
             {

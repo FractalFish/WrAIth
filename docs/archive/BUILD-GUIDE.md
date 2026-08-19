@@ -1,6 +1,6 @@
 # Quick Build Guide for BLLMT
 
-## ?? Building Standalone Versions
+## Building Standalone Versions
 
 ### Windows (Run on Windows PC)
 
@@ -10,11 +10,11 @@
 ```
 
 **What it does:**
-- ? Creates self-contained .exe (includes .NET runtime)
-- ? Single file executable (~75 MB)
-- ? No dependencies needed
-- ? Creates ZIP for distribution
-- ? Adds README.txt
+- Creates self-contained .exe (includes .NET runtime)
+- Single file executable (~75 MB)
+- No dependencies needed
+- Creates ZIP for distribution
+- Adds README.txt
 
 **Output:** `.\publish\windows\BLLMT.exe`
 
@@ -28,11 +28,11 @@ bash build-macos.sh
 ```
 
 **What it does:**
-- ? Creates universal .app bundle (Intel + Apple Silicon)
-- ? Includes .NET runtime
-- ? No dependencies needed
-- ? Optionally creates DMG
-- ? Adds README.txt
+- Creates universal .app bundle (Intel + Apple Silicon)
+- Includes .NET runtime
+- No dependencies needed
+- Optionally creates DMG
+- Adds README.txt
 
 **Output:** `./publish/macos/BLLMT.app`
 
@@ -44,7 +44,7 @@ bash build-macos.sh
 
 ---
 
-## ?? What Gets Built
+## What Gets Built
 
 ### Windows Build
 ```
@@ -68,11 +68,11 @@ publish/macos/
 
 ---
 
-## ?? Quick Start (Step by Step)
+## Quick Start (Step by Step)
 
 ### For Windows:
 
-1. **Open PowerShell** (right-click project folder ? "Open in Terminal")
+1. **Open PowerShell** (right-click project folder -> "Open in Terminal")
 
 2. **Run build script:**
    ```powershell
@@ -87,8 +87,8 @@ publish/macos/
    ```
 
 5. **Create distribution ZIP:**
-   - Script will ask if you want to create a ZIP
-   - Type `Y` and press Enter
+ - Script will ask if you want to create a ZIP
+ - Type `Y` and press Enter
 
 6. **Done!** Upload `BLLMT-Windows-v1.0.0.zip` to GitHub Releases
 
@@ -130,14 +130,14 @@ publish/macos/
    ```
 
 8. **Create DMG:**
-   - Script will ask if you want to create a DMG
-   - Type `y` and press Enter
+ - Script will ask if you want to create a DMG
+ - Type `y` and press Enter
 
 9. **Done!** Upload `BLLMT-macOS-v1.0.0.dmg` to GitHub Releases
 
 ---
 
-## ?? Troubleshooting
+## Troubleshooting
 
 ### Windows Build Issues
 
@@ -190,18 +190,18 @@ xattr -dr com.apple.quarantine ./publish/macos/BLLMT.app
 
 ---
 
-## ?? Build Sizes
+## Build Sizes
 
 | Platform | Self-Contained | Framework-Dependent |
 |----------|----------------|---------------------|
-| Windows  | ~75 MB         | ~5 MB               |
-| macOS    | ~60 MB         | ~15 MB              |
+| Windows | ~75 MB | ~5 MB |
+| macOS | ~60 MB | ~15 MB |
 
 **Recommendation:** Use self-contained builds for distribution (easier for users)
 
 ---
 
-## ?? Customizing Builds
+## Customizing Builds
 
 ### Change Version Number
 
@@ -231,7 +231,7 @@ Add these to the `dotnet publish` command:
 
 ---
 
-## ?? Advanced: Code Signing
+## Advanced: Code Signing
 
 ### Windows (Optional)
 
@@ -262,7 +262,7 @@ xcrun stapler staple ./publish/macos/BLLMT.app
 
 ---
 
-## ?? Checklist Before Release
+## Checklist Before Release
 
 ### Both Platforms
 - [ ] Build completes without errors
@@ -287,16 +287,16 @@ xcrun stapler staple ./publish/macos/BLLMT.app
 
 ---
 
-## ?? Distribution
+## Distribution
 
 ### GitHub Releases (Recommended)
 
 1. Go to GitHub repository
-2. Click "Releases" ? "Create a new release"
+2. Click "Releases" -> "Create a new release"
 3. Tag version (e.g., `v1.0.0`)
 4. Upload:
-   - `BLLMT-Windows-v1.0.0.zip`
-   - `BLLMT-macOS-v1.0.0.dmg`
+ - `BLLMT-Windows-v1.0.0.zip`
+ - `BLLMT-macOS-v1.0.0.dmg`
 5. Write release notes
 6. Publish!
 
@@ -306,7 +306,7 @@ See `DISTRIBUTION-STRATEGY.md` for creating a Homebrew tap
 
 ---
 
-## ?? Tips
+## Tips
 
 1. **First build takes longer** - subsequent builds are faster
 2. **Test on clean machines** - VM or friend's computer
@@ -316,7 +316,7 @@ See `DISTRIBUTION-STRATEGY.md` for creating a Homebrew tap
 
 ---
 
-## ?? Need Help?
+## Need Help?
 
 - **Build errors:** Check error messages and troubleshooting section
 - **Runtime errors:** Check logs (see QUICK-REFERENCE.md)
@@ -326,7 +326,7 @@ See `DISTRIBUTION-STRATEGY.md` for creating a Homebrew tap
 
 **Ready to build?**
 
-Windows: `.\build-windows.ps1`  
+Windows: `.\build-windows.ps1`
 macOS: `bash build-macos.sh`
 
-**Let's go!** ??
+**Let's go!**

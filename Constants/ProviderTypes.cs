@@ -1,4 +1,4 @@
-namespace BLLMT.Constants
+namespace Wraith.Constants
 {
     /// <summary>
     /// Provider type constants for API format identification

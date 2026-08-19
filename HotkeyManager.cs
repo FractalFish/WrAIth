@@ -1,7 +1,7 @@
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-namespace BLLMT
+namespace Wraith
 {
     public class HotkeyManager : IDisposable
     {

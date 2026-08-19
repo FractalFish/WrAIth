@@ -1,4 +1,4 @@
-namespace BLLMT.Constants
+namespace Wraith.Constants
 {
     /// <summary>
     /// Default API endpoints for supported providers
@@ -39,6 +39,21 @@ namespace BLLMT.Constants
         /// Local LM Studio endpoint (OpenAI-compatible)
         /// </summary>
         public const string LMStudio = "http://localhost:1234/v1/chat/completions";
+
+        /// <summary>
+        /// OpenAI list-models endpoint
+        /// </summary>
+        public const string OpenAIModelsList = "https://api.openai.com/v1/models";
+
+        /// <summary>
+        /// Groq list-models endpoint (OpenAI-compatible)
+        /// </summary>
+        public const string GroqModelsList = "https://api.groq.com/openai/v1/models";
+
+        /// <summary>
+        /// Anthropic list-models endpoint
+        /// </summary>
+        public const string AnthropicModelsList = "https://api.anthropic.com/v1/models";
 
         /// <summary>
         /// Get default endpoint for a provider type

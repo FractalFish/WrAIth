@@ -1,7 +1,7 @@
 using System.Text.Json.Serialization;
-using BLLMT.Constants;
+using Wraith.Constants;
 
-namespace BLLMT
+namespace Wraith
 {
     /// <summary>
     /// Represents a global hotkey mapping that links a keyboard combination to a model and action.

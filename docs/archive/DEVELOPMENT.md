@@ -99,11 +99,11 @@ public class CustomApiFormat
 ## Workflow: Text Processing
 
 1. User copies text to clipboard
-2. Presses **Send Query** hotkey ? `OnTriggerHotkey()`
+2. Presses **Send Query** hotkey -> `OnTriggerHotkey()`
 3. Clipboard content read
 4. Sent to LLMService with selected model
 5. Response received and queued
-6. User presses **Output** hotkey ? `OnOutputHotkey()`
+6. User presses **Output** hotkey -> `OnOutputHotkey()`
 7. Emulation starts: `KeyboardHook` intercepts keystrokes
 8. Each keystroke replaced with next character from response
 9. User types naturally, AI response appears instead
@@ -113,9 +113,9 @@ public class CustomApiFormat
 ## Workflow: Vision + Reasoning (Two-Stage)
 
 ### Stage 1: Vision Analysis
-1. User presses **Screenshot Start** ? Overlay appears
+1. User presses **Screenshot Start** -> Overlay appears
 2. User drags to select region
-3. User presses **Screenshot End** ? Capture & analyze
+3. User presses **Screenshot End** -> Capture & analyze
 4. Vision model analyzes image
 5. Result stored in `_visionResult`
 6. Also queued in `_queuedResponse` for direct output
@@ -145,7 +145,7 @@ public class CustomApiFormat
 - Quick switching between models without UI
 - Can assign hotkeys only to frequently-used models
 
-**Problem**: 
+**Problem**:
 - Hotkey conflicts possible
 - Confusing which model responds to which key
 - Hard to manage many models
@@ -182,8 +182,8 @@ public class CustomApiFormat
 
 **Old Design**: Manual checkbox to mark vision models
 
-**Problem**: 
-- Redundant (if model has screenshot hotkeys ? it's vision-capable)
+**Problem**:
+- Redundant (if model has screenshot hotkeys -> it's vision-capable)
 - Doesn't actually control anything
 - Extra configuration step
 
@@ -277,7 +277,7 @@ User-defined via CustomApiFormat (see above)
 ### No Undo
 **Current**: Once emulation starts, can't easily undo typed response
 
-**Possible**: 
+**Possible**:
 - Ctrl+Z detection during emulation
 - Character-by-character backspace simulation
 
@@ -305,7 +305,7 @@ Settings form includes "Test Model" button:
 
 See **ROADMAP.md** for detailed plans:
 
-1. **Global Hotkeys System** - Hotkey ? Model + Action mapping
+1. **Global Hotkeys System** - Hotkey -> Model + Action mapping
 2. **Model Presets** - User-defined configuration templates
 3. **Plugin System** - Extensible action framework
 4. **Conversation History** - Track queries and responses

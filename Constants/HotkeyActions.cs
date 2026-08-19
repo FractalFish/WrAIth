@@ -1,4 +1,4 @@
-namespace BLLMT.Constants
+namespace Wraith.Constants
 {
     /// <summary>
     /// Action identifiers for global hotkey mappings (Phase 2: Global Hotkeys System)

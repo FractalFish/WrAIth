@@ -1,4 +1,6 @@
-namespace BLLMT
+using Wraith.Services;
+
+namespace Wraith
 {
 #if WINDOWS
     internal static class Program
@@ -9,22 +11,23 @@ namespace BLLMT
         [STAThread]
         static void Main()
         {
+            System.Windows.Forms.Application.SetUnhandledExceptionMode(System.Windows.Forms.UnhandledExceptionMode.CatchException);
+            System.Windows.Forms.Application.ThreadException += (sender, e) => HandleFatalException(e.Exception);
+            AppDomain.CurrentDomain.UnhandledException += (sender, e) => HandleFatalException(e.ExceptionObject as Exception);
+
             // Windows Forms application
             ApplicationConfiguration.Initialize();
             System.Windows.Forms.Application.Run(new Form1());
         }
-    }
-#elif MACCATALYST
-    public class Program
-    {
-        /// <summary>
-        /// The main entry point for the macOS application.
-        /// </summary>
-        static void Main(string[] args)
+
+        private static void HandleFatalException(Exception? ex)
         {
-            // MAUI application for macOS
-            var app = MauiProgram.CreateMauiApp();
-            app.Run();
+            Logger.LogError("Unhandled exception - application will exit", ex);
+            System.Windows.Forms.MessageBox.Show(
+                $"Wraith hit an unexpected error and needs to close.\n\n{ex?.Message}\n\nDetails were written to %APPDATA%\\Wraith\\error.log",
+                "Wraith - Unexpected Error",
+                System.Windows.Forms.MessageBoxButtons.OK,
+                System.Windows.Forms.MessageBoxIcon.Error);
         }
     }
 #else
@@ -32,7 +35,7 @@ namespace BLLMT
     {
         static void Main()
         {
-            throw new PlatformNotSupportedException("This platform is not supported. Build with -f net10.0-windows or -f net10.0-maccatalyst");
+            throw new PlatformNotSupportedException("This platform is not supported. Build with -f net10.0-windows");
         }
     }
 #endif

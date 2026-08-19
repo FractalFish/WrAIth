@@ -1,6 +1,6 @@
 # Final Designer Fixes - Line-by-Line Guide
 
-You have SettingsForm.Designer.cs open. The file is too large for me to edit automatically. 
+You have SettingsForm.Designer.cs open. The file is too large for me to edit automatically.
 
 Here are the EXACT line numbers to delete:
 
@@ -185,7 +185,7 @@ This removes all the txt Trigger/Screenshot/Output/Abort hotkey controls from th
 ## Summary:
 
 1. Delete hotkeys from Models tab (~lines 260-350)
-2. Delete old Hotkeys tab content (~lines 430-540)  
+2. Delete old Hotkeys tab content (~lines 430-540)
 3. Insert new Hotkeys tab code where you deleted #2
 
 **Save, build, and test!**
